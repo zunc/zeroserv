@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="inc" projectFiles="true">
+      <logicalFolder name="f1" displayName="common" projectFiles="true">
+        <itemPath>src/common/compiler.h</itemPath>
+        <itemPath>src/common/mini-clist.h</itemPath>
+        <itemPath>src/common/ticks.c</itemPath>
+        <itemPath>src/common/ticks.h</itemPath>
+        <itemPath>src/common/time.h</itemPath>
+        <itemPath>src/common/uthash.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="ebtree" projectFiles="true">
+        <itemPath>src/ebtree/compiler.h</itemPath>
+        <itemPath>src/ebtree/eb32tree.c</itemPath>
+        <itemPath>src/ebtree/eb32tree.h</itemPath>
+        <itemPath>src/ebtree/ebtree.c</itemPath>
+        <itemPath>src/ebtree/ebtree.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="handler" projectFiles="true">
+        <logicalFolder name="f1" displayName="mc" projectFiles="true">
+          <logicalFolder name="f1" displayName="type" projectFiles="true">
+            <itemPath>src/handler/mc/type/item.h</itemPath>
+          </logicalFolder>
+          <itemPath>src/handler/mc/assoc.c</itemPath>
+          <itemPath>src/handler/mc/assoc.h</itemPath>
+          <itemPath>src/handler/mc/items.c</itemPath>
+          <itemPath>src/handler/mc/items.h</itemPath>
+          <itemPath>src/handler/mc/settings.h</itemPath>
+          <itemPath>src/handler/mc/stats.h</itemPath>
+          <itemPath>src/handler/mc/util.h</itemPath>
+        </logicalFolder>
+        <itemPath>src/handler/echo.c</itemPath>
+        <itemPath>src/handler/echo.h</itemPath>
+        <itemPath>src/handler/http.c</itemPath>
+        <itemPath>src/handler/http.h</itemPath>
+        <itemPath>src/handler/memcached.c</itemPath>
+        <itemPath>src/handler/memcached.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="handler_udp" projectFiles="true">
+        <logicalFolder name="f1" displayName="routing" projectFiles="true">
+          <logicalFolder name="f1" displayName="type" projectFiles="true">
+            <itemPath>src/handler_udp/routing/type/rex.h</itemPath>
+            <itemPath>src/handler_udp/routing/type/rout.h</itemPath>
+            <itemPath>src/handler_udp/routing/type/route.h</itemPath>
+          </logicalFolder>
+          <itemPath>src/handler_udp/routing/local_port.c</itemPath>
+          <itemPath>src/handler_udp/routing/local_port.h</itemPath>
+          <itemPath>src/handler_udp/routing/mineip.c</itemPath>
+          <itemPath>src/handler_udp/routing/mineip.h</itemPath>
+          <itemPath>src/handler_udp/routing/proto_routing.h</itemPath>
+          <itemPath>src/handler_udp/routing/route_map.c</itemPath>
+          <itemPath>src/handler_udp/routing/route_map.h</itemPath>
+        </logicalFolder>
+        <itemPath>src/handler_udp/echo_udp.c</itemPath>
+        <itemPath>src/handler_udp/echo_udp.h</itemPath>
+        <itemPath>src/handler_udp/routing.c</itemPath>
+        <itemPath>src/handler_udp/routing.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="type" projectFiles="true">
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles" displayName="src" projectFiles="true">
+      <itemPath>src/cfg.c</itemPath>
+      <itemPath>src/client.c</itemPath>
+      <itemPath>src/dbg.c</itemPath>
+      <itemPath>src/fd.c</itemPath>
+      <itemPath>src/handler.c</itemPath>
+      <itemPath>src/poller.c</itemPath>
+      <itemPath>src/proto_tcp.c</itemPath>
+      <itemPath>src/proto_udp.c</itemPath>
+      <itemPath>src/protos.c</itemPath>
+      <itemPath>src/signal.c</itemPath>
+      <itemPath>src/task.c</itemPath>
+      <itemPath>src/time.c</itemPath>
+      <itemPath>src/util.c</itemPath>
+      <itemPath>src/zeroserv.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <linkerTool>
+          <output>bin/zeroservd</output>
+          <linkerLibItems>
+            <linkerOptionItem>-lconfig</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="src/cfg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/client.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/common/compiler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/mini-clist.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/ticks.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/common/ticks.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/time.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/uthash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/dbg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/ebtree/compiler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ebtree/eb32tree.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/ebtree/eb32tree.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ebtree/ebtree.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/ebtree/ebtree.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/fd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/echo.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/echo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/assoc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/assoc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/items.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/items.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/settings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/stats.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/type/item.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/util.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/memcached.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/local_port.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/local_port.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/mineip.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/mineip.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/proto_routing.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/route_map.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/route_map.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/rex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/rout.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/route.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/poller.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/proto_tcp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/proto_udp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/protos.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/signal.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/task.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/time.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/util.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/zeroserv.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="src/cfg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/client.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/common/compiler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/mini-clist.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/ticks.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/common/ticks.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/time.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/uthash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/dbg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/ebtree/compiler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ebtree/eb32tree.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/ebtree/eb32tree.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ebtree/ebtree.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/ebtree/ebtree.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/fd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/echo.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/echo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/assoc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/assoc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/items.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/items.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/settings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/stats.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/type/item.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/util.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/memcached.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/local_port.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/local_port.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/mineip.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/mineip.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/proto_routing.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/route_map.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/route_map.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/rex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/rout.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/route.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/poller.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/proto_tcp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/proto_udp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/protos.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/signal.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/task.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/time.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/util.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/zeroserv.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
