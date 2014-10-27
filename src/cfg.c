@@ -34,7 +34,7 @@ int config_load(const char* file) {
 	config_init(&cfg);
 
 	if (!config_read_file(&cfg, file)) {
-		log_fatal("%s:%d - %s\n", config_error_file(&cfg),
+		log_fatal("config_read_file: %s:%d - %s\n", config_error_file(&cfg),
 				config_error_line(&cfg), config_error_text(&cfg));
 	}
 

@@ -16,6 +16,10 @@
 #include <stdbool.h>
 
 #include "settings.h"
+#include "../../common/time.h"
+#include "stats.h"
+
+struct stats stats;
 
 #if JE_ALLOC
 
@@ -254,14 +258,12 @@ int do_item_link(item *it) {
 	assert(it->nbytes < (1024 * 1024)); /* 1MB max size */
 	it->it_flags |= ITEM_LINKED;
 	//<>
-	//    it->time = current_time;
+	it->time = now_ms;
 	assoc_insert(it);
 
-	//    STATS_LOCK();
-	//    stats.curr_bytes += ITEM_ntotal(it);
-	//    stats.curr_items += 1;
-	//    stats.total_items += 1;
-	//    STATS_UNLOCK();
+	stats.curr_bytes += ITEM_ntotal(it);
+	stats.curr_items += 1;
+	stats.total_items += 1;
 
 	/* Allocate a new CAS ID on link. */
 	it->cas_id = get_cas_id();

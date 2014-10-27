@@ -5,8 +5,8 @@
  * Created on October 16, 2014, 11:05 AM
  */
 
-#ifndef ROUTING_H
-#define	ROUTING_H
+#ifndef TROUTING_H
+#define	TROUTING_H
 
 #include "../type/protocols.h"
 #include "../type/proto_handler.h"
@@ -31,6 +31,7 @@ struct router_setting {
 	int retry;
 	int timeout;
 	int max_packet;
+	char *layer;
 };
 
 struct router_stat {

@@ -1,49 +1,24 @@
-#include <stdlib.h>
-#include "route_map.h"
+/* 
+ * File:   route_map.h
+ * Author: khoai
+ *
+ * Created on October 17, 2014, 10:25 AM
+ */
+
+#ifndef ROUTE_MAP_H
+#define	ROUTE_MAP_H
+
+#include "type/route.h"
 #include "../../dbg.h"
 #include <string.h>
 #include <sys/types.h>
 
-static struct list routes = LIST_HEAD_INIT(routes);
+void route_register(struct route *r);
+void route_unregister(struct route *r);
+struct route* route_get_by_name(const char* name);
+struct route* route_get_by_dst(const char* dst);
 
-void route_register(struct route *r) {
-	LIST_ADDQ(&routes, &r->list);
-}
-
-void route_unregister(struct route *r) {
-	LIST_DEL(&r->list);
-	LIST_INIT(&r->list);
-	if (r->rex_dest)
-		free(r->rex_dest);
-	if (r)
-		free(r);
-}
-
-struct route* route_get_by_name(const char* name) {
-	struct route *r;
-
-	list_for_each_entry(r, &routes, list) {
-		if (!strcmp(r->name, name))
-			return r;
-	}
-	return 0;
-}
-
-struct route* route_get_by_dst(const char* dst) {
-	struct route *r;
-	const int n_matches = 10;
-	regmatch_t m[n_matches];
-	
-	list_for_each_entry(r, &routes, list) {
-		int no_match = regexec(r->rex_dest, dst, n_matches, m, 0);
-		if (!no_match) {
-			return r;
-		}
-	}
-	return 0;
-}
-
-int route_register_config(const char *name, const char *src, const char *remote) {
+static int route_register_config(const char *name, const char *src, const char *remote) {
 	// filter sploil config
 	if ((strlen(name) >= ROUT_BUF_REV)
 			|| (strlen(src) >= ROUT_BUF_REV)
@@ -105,3 +80,6 @@ int route_register_config(const char *name, const char *src, const char *remote)
 	route_register(rout);
 	return 0;
 }
+
+#endif	/* ROUTE_MAP_H */
+

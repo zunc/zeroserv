@@ -19,6 +19,7 @@
 //--- string proc
 #include <string.h>
 
+#define ECHO_BUFFER_SIZE 4096
 #define SPLITTER " "
 
 #define LOG_REQ 0
@@ -108,14 +109,14 @@ int http_accept(int fd) {
 	struct buffer *ob = (struct buffer*) malloc(sizeof (struct buffer));
 	fdtab[fd].cb[DIR_RD].b = ib;
 	fdtab[fd].cb[DIR_WR].b = ob;
-	buffer_reset(ib);
-	buffer_reset(ob);
+	buffer_init(ib, ECHO_BUFFER_SIZE);
+	buffer_init(ob, ECHO_BUFFER_SIZE);
 	return 0;
 }
 
 int http_disconnect(int fd) {
-	FREE(fdtab[fd].cb[DIR_RD].b);
-	FREE(fdtab[fd].cb[DIR_WR].b);
+	buffer_free(fdtab[fd].cb[DIR_RD].b);
+	buffer_free(fdtab[fd].cb[DIR_WR].b);
 	return 0;
 }
 

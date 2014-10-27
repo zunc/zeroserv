@@ -48,11 +48,14 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/handler/mc/assoc.o \
 	${OBJECTDIR}/src/handler/mc/items.o \
 	${OBJECTDIR}/src/handler/memcached.o \
+	${OBJECTDIR}/src/handler/trouting.o \
 	${OBJECTDIR}/src/handler_udp/echo_udp.o \
 	${OBJECTDIR}/src/handler_udp/routing.o \
 	${OBJECTDIR}/src/handler_udp/routing/local_port.o \
 	${OBJECTDIR}/src/handler_udp/routing/mineip.o \
+	${OBJECTDIR}/src/handler_udp/routing/proto_routing.o \
 	${OBJECTDIR}/src/handler_udp/routing/route_map.o \
+	${OBJECTDIR}/src/handler_udp/routing/tcp_router_parse.o \
 	${OBJECTDIR}/src/poller.o \
 	${OBJECTDIR}/src/proto_tcp.o \
 	${OBJECTDIR}/src/proto_udp.o \
@@ -153,6 +156,11 @@ ${OBJECTDIR}/src/handler/memcached.o: src/handler/memcached.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/memcached.o src/handler/memcached.c
 
+${OBJECTDIR}/src/handler/trouting.o: src/handler/trouting.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/trouting.o src/handler/trouting.c
+
 ${OBJECTDIR}/src/handler_udp/echo_udp.o: src/handler_udp/echo_udp.c 
 	${MKDIR} -p ${OBJECTDIR}/src/handler_udp
 	${RM} "$@.d"
@@ -173,10 +181,20 @@ ${OBJECTDIR}/src/handler_udp/routing/mineip.o: src/handler_udp/routing/mineip.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler_udp/routing/mineip.o src/handler_udp/routing/mineip.c
 
+${OBJECTDIR}/src/handler_udp/routing/proto_routing.o: src/handler_udp/routing/proto_routing.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler_udp/routing
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler_udp/routing/proto_routing.o src/handler_udp/routing/proto_routing.c
+
 ${OBJECTDIR}/src/handler_udp/routing/route_map.o: src/handler_udp/routing/route_map.c 
 	${MKDIR} -p ${OBJECTDIR}/src/handler_udp/routing
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler_udp/routing/route_map.o src/handler_udp/routing/route_map.c
+
+${OBJECTDIR}/src/handler_udp/routing/tcp_router_parse.o: src/handler_udp/routing/tcp_router_parse.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler_udp/routing
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler_udp/routing/tcp_router_parse.o src/handler_udp/routing/tcp_router_parse.c
 
 ${OBJECTDIR}/src/poller.o: src/poller.c 
 	${MKDIR} -p ${OBJECTDIR}/src

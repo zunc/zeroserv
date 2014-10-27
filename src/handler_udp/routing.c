@@ -18,10 +18,11 @@
 #include "../common.h"
 #include "../handler.h"
 #include "routing/proto_routing.h"
-#include "routing/route_map.h"
-#include "routing/mineip.h"
-#include "routing/local_port.h"
+//#include "routing/route_map.h"
+//#include "routing/mineip.h"
+//#include "routing/local_port.h"
 
+#define R_BUFF_SIZE 4096
 struct router_setting router_setting;
 
 int routing_init(struct listener *listener) {
@@ -37,28 +38,14 @@ int routing_init(struct listener *listener) {
 	int fd = listener->fd;
 	struct buffer *b = (struct buffer*) malloc(sizeof (struct buffer));
 	fdtab[fd].cb[DIR_RD].b = fdtab[fd].cb[DIR_WR].b = b;
-	buffer_reset(b);
+	buffer_init(b, R_BUFF_SIZE);
 	printf("[%*d] connected\n", 4, fd);
 	return 0;
 }
 
 int routing_deinit(int fd) {
 	struct buffer *b = fdtab[fd].cb[DIR_WR].b;
-	FREE(b);
-	return 0;
-}
-
-static in_port_t get_in_port(struct sockaddr *sa) {
-	if (sa->sa_family == AF_INET) {
-		return (((struct sockaddr_in*) sa)->sin_port);
-	}
-	return 0;
-}
-
-static uint32_t get_in_host(struct sockaddr *sa) {
-	if (sa->sa_family == AF_INET) {
-		return (((struct sockaddr_in*) sa)->sin_addr.s_addr);
-	}
+	buffer_free(b);
 	return 0;
 }
 
@@ -75,10 +62,10 @@ int routing_read(int fd) {
 
 		char host[NI_MAXHOST];
 		char port[NI_MAXSERV];
-
-		int rc = getnameinfo((struct sockaddr *)&sa, sa_len, host, sizeof(host), port, sizeof(port), NI_NUMERICHOST | NI_NUMERICSERV);
+		int rc = getnameinfo((struct sockaddr *) &sa, sa_len, host,
+				sizeof (host), port, sizeof (port), NI_NUMERICHOST | NI_NUMERICSERV);
 		if (rc == 0) printf("connection from %s %s", host, port);
-		
+
 		// process protocol
 		int ret = routing_parse(fd);
 		buffer_reset(ib);
@@ -115,6 +102,7 @@ int routing_load_config(void *config) {
 	}
 
 	// routing map load
+	log_info("routing_load_config");
 	int count = config_setting_length(_rout);
 	int i;
 	for (i = 0; i < count; ++i) {

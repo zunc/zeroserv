@@ -11,7 +11,6 @@ static struct list mineip = LIST_HEAD_INIT(mineip);
 
 struct mip {
 	unsigned int ip;
-	char name[64];
 	struct list list; // list
 };
 
@@ -45,7 +44,6 @@ int mineip_init() {
 			}
 			log_info(" - interface : <%s>, address : <%s>", ifa->ifa_name, host);
 			inet_aton(host, &ip->ip);
-			strcpy(ip->name, ifa->ifa_name);
 			LIST_ADDQ(&mineip, &ip->list);
 		}
 	}
@@ -65,16 +63,6 @@ unsigned int is_mine_ip(unsigned int ip) {
 	list_for_each_entry(mip, &mineip, list) {
 		if (mip->ip == ip)
 			return 1;
-	}
-	return 0;
-}
-
-// get mine ip by NIC name
-unsigned int get_ip_nic(const char *name) {
-	struct mip *mip;
-	list_for_each_entry(mip, &mineip, list) {
-		if (!strcmp(mip->name, name))
-			return mip->ip;
 	}
 	return 0;
 }

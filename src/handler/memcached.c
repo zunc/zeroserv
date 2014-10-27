@@ -12,6 +12,8 @@
 #include "mc/items.h"
 #include "mc/stats.h"
 
+#define MC_BUFFER_SIZE 4096
+
 #define RD_BUFF(fd)		fdtab[fd].cb[DIR_RD].b
 #define WR_BUFF(fd)		fdtab[fd].cb[DIR_WR].b
 #define RD_ENABLE(fd)	EV_FD_SET(fd, DIR_RD)
@@ -111,20 +113,34 @@ int mc_accept(int fd) {
 	struct buffer *ob = (struct buffer*) malloc(sizeof (struct buffer));
 	fdtab[fd].cb[DIR_RD].b = ib;
 	fdtab[fd].cb[DIR_WR].b = ob;
-	buffer_reset(ib);
-	buffer_reset(ob);
+	buffer_init(ib, MC_BUFFER_SIZE);
+	buffer_init(ob, MC_BUFFER_SIZE);
 	fdtab[fd].context = (struct conn*) malloc(sizeof (struct conn));
 	conn_data(fd)->state = conn_read;
+	conn_data(fd)->item = NULL;
+	stats.curr_conns++;
+	stats.total_conns++;
 	return 0;
 }
 
 int mc_disconnect(int fd) {
-	FREE(fdtab[fd].cb[DIR_RD].b);
-	FREE(fdtab[fd].cb[DIR_WR].b);
+	buffer_free(fdtab[fd].cb[DIR_RD].b);
+	buffer_free(fdtab[fd].cb[DIR_WR].b);
 	FREE(fdtab[fd].context);
 	return 0;
 }
 
+static void stats_init() {
+	stats.curr_items = stats.total_items = stats.curr_conns = stats.total_conns = stats.conn_structs = 0;
+	stats.get_cmds = stats.set_cmds = stats.get_hits = stats.get_misses = stats.evictions = 0;
+	stats.curr_bytes = stats.bytes_read = stats.bytes_written = 0;
+	stats.started = time(0) - 2;
+}
+
+int mc_init(struct listener *listener) {
+	stats_init();
+	return 0;
+}
 //---
 
 static size_t tokenize_command(char *command, token_t *tokens, const size_t max_tokens) {
@@ -201,6 +217,7 @@ static inline void process_get_command(int fd, token_t *tokens, size_t ntokens) 
 	int stats_get_hits = 0;
 	int stats_get_misses = 0;
 
+	stats.get_cmds++;
 	key = key_token->value;
 	nkey = key_token->length;
 	it = item_get(key, nkey);
@@ -226,7 +243,7 @@ static void process_update_command(int fd, token_t *tokens, const size_t ntokens
 	item *it, *old_it;
 
 	//	set_noreply_maybe(c, tokens, ntokens);
-
+	stats.set_cmds++;
 	if (tokens[KEY_TOKEN].length > KEY_MAX_LENGTH) {
 		out_string(fd, "CLIENT_ERROR bad command line format");
 		return;
@@ -286,8 +303,6 @@ static void process_command(int fd, char *command) {
 			((strcmp(tokens[COMMAND_TOKEN].value, "get") == 0) ||
 			(strcmp(tokens[COMMAND_TOKEN].value, "bget") == 0))) {
 		process_get_command(fd, tokens, ntokens);
-	} else if (ntokens == 2 && (strcmp(tokens[COMMAND_TOKEN].value, "version") == 0)) {
-		out_string(fd, "VERSION /-_-\\");
 	} else if ((ntokens == 6 || ntokens == 7) &&
 			((strcmp(tokens[COMMAND_TOKEN].value, "add") == 0 && (comm = NREAD_ADD)) ||
 			(strcmp(tokens[COMMAND_TOKEN].value, "set") == 0 && (comm = NREAD_SET)) ||
@@ -296,6 +311,33 @@ static void process_command(int fd, char *command) {
 			(strcmp(tokens[COMMAND_TOKEN].value, "append") == 0 && (comm = NREAD_APPEND)))) {
 		process_update_command(fd, tokens, ntokens, comm);
 
+	} else if (ntokens == 2 && (strcmp(tokens[COMMAND_TOKEN].value, "version") == 0)) {
+		out_string(fd, "VERSION /-_-\\");
+	} else if (ntokens == 2 && (strcmp(tokens[COMMAND_TOKEN].value, "stats") == 0)) {
+		char temp[1024];
+		pid_t pid = getpid();
+		char *pos = temp;
+
+		pos += sprintf(pos, "STAT pid %u\r\n", pid);
+		//        pos += sprintf(pos, "STAT uptime %u\r\n", now);
+		//        pos += sprintf(pos, "STAT time %ld\r\n", now + stats.started);
+//		pos += sprintf(pos, "STAT version " VERSION "\r\n");
+		pos += sprintf(pos, "STAT pointer_size %ld\r\n", 8 * sizeof (void *));
+		pos += sprintf(pos, "STAT curr_items %u\r\n", stats.curr_items);
+		pos += sprintf(pos, "STAT total_items %u\r\n", stats.total_items);
+		pos += sprintf(pos, "STAT bytes %ld\r\n", stats.curr_bytes);
+		pos += sprintf(pos, "STAT curr_connections %u\r\n", stats.curr_conns - 1); /* ignore listening conn */
+		pos += sprintf(pos, "STAT total_connections %u\r\n", stats.total_conns);
+//		pos += sprintf(pos, "STAT connection_structures %u\r\n", stats.conn_structs);
+		pos += sprintf(pos, "STAT cmd_get %ld\r\n", stats.get_cmds);
+		pos += sprintf(pos, "STAT cmd_set %ld\r\n", stats.set_cmds);
+		pos += sprintf(pos, "STAT get_hits %ld\r\n", stats.get_hits);
+		pos += sprintf(pos, "STAT get_misses %ld\r\n", stats.get_misses);
+		pos += sprintf(pos, "STAT evictions %ld\r\n", stats.evictions);
+		pos += sprintf(pos, "STAT bytes_read %ld\r\n", stats.bytes_read);
+		pos += sprintf(pos, "STAT bytes_written %ld\r\n", stats.bytes_written);
+		pos += sprintf(pos, "END");
+		out_string(fd, temp);
 	} else {
 		out_string(fd, "ERROR");
 	}
@@ -484,9 +526,11 @@ int try_read_network(int fd) {
 
 static void conn_cleanup(int fd) {
 	struct conn *c = conn_data(fd);
-	if (c->item) {
-		item_remove(c->item);
-		c->item = 0;
+	if (c) {
+		if (c->item) {
+			item_remove(c->item);
+			c->item = 0;
+		}
 	}
 }
 
@@ -561,7 +605,7 @@ int mc_read(int fd) {
 				stop = true;
 				break;
 			case conn_closing:
-				log_info("[%-*d]disconnect\n", 4, fd);
+				log_info("[%-*d]disconnect", 4, fd);
 				conn_close(fd);
 				stop = true;
 				break;
@@ -578,6 +622,7 @@ int mc_write(int fd) {
 	int n = send(fd, ob->curr, remain, 0);
 	if (n > 0) {
 		ob->curr += n;
+		stats.bytes_written += n;
 		if (buffer_empty(ob)) {
 			buffer_reset(ib);
 			buffer_reset(ob);

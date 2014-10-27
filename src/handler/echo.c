@@ -19,6 +19,7 @@
 #include "../common/time.h"
 #include "../task.h"
 
+#define HTTP_BUFFER_SIZE 4096
 #define RUN_ONCE	0
 #define MAINTAIN_TIME	10000
 uint32_t _conn;
@@ -41,8 +42,8 @@ struct task * timeout(struct task *t) {
 
 int echo_accept(int fd) {
 	struct buffer *b = (struct buffer*) malloc(sizeof (struct buffer));
+	buffer_init(b, HTTP_BUFFER_SIZE);
 	fdtab[fd].cb[DIR_RD].b = fdtab[fd].cb[DIR_WR].b = b;
-	buffer_reset(b);
 	printf("[%*d] connected\n", 4, fd);
 
 	// setup a task: drop connection in 5s
@@ -62,7 +63,7 @@ int echo_accept(int fd) {
 int echo_disconnect(int fd) {
 	log_info("[%*d] disconnect\n", 4, fd);
 	struct buffer *b = fdtab[fd].cb[DIR_WR].b;
-	FREE(b);
+	buffer_free(b);
 	fdtab[fd].cb[DIR_WR].b = NULL;
 	_conn--;
 	return 0;

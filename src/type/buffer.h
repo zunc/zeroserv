@@ -9,10 +9,10 @@
 #define	TYPE_BUFFER_H
 
 struct buffer {
-	char buff[4096];
 	char *r; // recv
 	char *curr; // process pointer
 	size_t total;
+	char *buff;
 };
 
 #endif	/* TYPE_BUFFER_H */

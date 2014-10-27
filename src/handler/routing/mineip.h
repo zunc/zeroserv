@@ -11,7 +11,6 @@
 int mineip_init();
 int mineip_deinit();
 unsigned int is_mine_ip(unsigned int ip);
-unsigned int get_ip_nic(const char *name);
 
 #endif	/* MINEIP_H */
 
