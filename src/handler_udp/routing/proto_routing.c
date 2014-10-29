@@ -166,43 +166,6 @@ static int proc_mine(int fd, union packet *pk) {
 	}
 }
 
-static int ack_wait_task(struct route *rout, union packet *pk, cb_ack cb) {
-	// make a trip
-	struct packet_trip *trip = malloc(sizeof (struct packet_trip));
-	trip->fd = fd_;
-	trip->entries = 1; // init
-	trip->time_start = now_ms; // get current time
-	trip->r = rout; // router note
-	trip->p = pk;
-	trip->cb = cb;
-
-	//---
-	// make a task
-	struct task *t = NULL;
-	if ((t = task_new()) == NULL) {
-		//FREE(trip->p);
-		FREE(trip);
-		return 1;
-	}
-
-	t->context = (void*) trip;
-	t->expire = tick_add(now_ms, router_setting.timeout);
-	t->process = retry;
-	task_queue(t);
-
-	// put task to task table by hash
-	char hash[MAX_HASH];
-	int n = zen_hash(pk, hash, MAX_HASH);
-	struct hash_task *ht = malloc(sizeof (struct hash_task));
-	ht->unique = malloc(n);
-	strcpy(ht->unique, hash);
-	ht->task = t;
-
-	//---
-	HASH_ADD_STR(tasks, unique, ht);
-	return 0;
-}
-
 // oneway send packet
 
 int routing_proc(int fd, union packet *pk) {
@@ -248,43 +211,6 @@ int routing_proc(int fd, union packet *pk) {
 	} else {
 		// direct to dest
 		send_packet_direct(fd, pk->field.dstIp, pk->field.dstPort, pk);
-	}
-	return 0;
-}
-
-// sync send packet
-
-int routing_proc_ack(union packet *pk, cb_ack cb) {
-	ASSERT(pk);
-
-	char dst[20];
-	ntoip(dst, pk->field.dstIp);
-	//--- transfer data to next node
-	char dest_detail[64];
-	snprintf(dest_detail, sizeof (dest_detail) - 1, "%s:%d", dst, pk->field.dstPort);
-	struct route* rout = route_get_by_dst(dest_detail);
-	if (!rout) {
-		log_warn("\t [!] source not match on rule routing");
-		// warn stuff
-		//
-		return 1;
-	}
-	log_info("\t -> next_node: %s : %s", rout->remote, pk->field.data);
-
-	if (ack_wait_task(rout, pk, cb)) {
-		// make task fail, warning
-		log_warn("ack_wait_task");
-		FREE(pk);
-		return 1;
-	}
-
-	//--- First time - Ronan Keating :*
-	if (strcmp(rout->remote, "*")) {
-		// rout next node
-		send_packet(fd_, rout, pk);
-	} else {
-		// direct to dest
-		send_packet_direct(fd_, pk->field.dstIp, pk->field.dstPort, pk);
 	}
 	return 0;
 }

@@ -32,18 +32,12 @@
           <itemPath>src/handler/mc/stats.h</itemPath>
           <itemPath>src/handler/mc/util.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="routing" projectFiles="true">
-          <itemPath>src/handler_udp/routing/tcp_router_parse.c</itemPath>
-          <itemPath>src/handler/routing/tcp_router_parse.h</itemPath>
-        </logicalFolder>
         <itemPath>src/handler/echo.c</itemPath>
         <itemPath>src/handler/echo.h</itemPath>
         <itemPath>src/handler/http.c</itemPath>
         <itemPath>src/handler/http.h</itemPath>
         <itemPath>src/handler/memcached.c</itemPath>
         <itemPath>src/handler/memcached.h</itemPath>
-        <itemPath>src/handler/trouting.c</itemPath>
-        <itemPath>src/handler/trouting.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="handler_udp" projectFiles="true">
         <logicalFolder name="f1" displayName="routing" projectFiles="true">
@@ -225,15 +219,6 @@
       </item>
       <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/handler/routing/tcp_router_parse.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="src/handler/trouting.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/handler/trouting.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
@@ -274,11 +259,6 @@
       <item path="src/handler_udp/routing/route_map.h"
             ex="false"
             tool="3"
-            flavor2="0">
-      </item>
-      <item path="src/handler_udp/routing/tcp_router_parse.c"
-            ex="false"
-            tool="0"
             flavor2="0">
       </item>
       <item path="src/handler_udp/routing/type/route.h"
@@ -448,15 +428,6 @@
       </item>
       <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/handler/routing/tcp_router_parse.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="src/handler/trouting.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/handler/trouting.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
@@ -497,11 +468,6 @@
       <item path="src/handler_udp/routing/route_map.h"
             ex="false"
             tool="3"
-            flavor2="0">
-      </item>
-      <item path="src/handler_udp/routing/tcp_router_parse.c"
-            ex="false"
-            tool="0"
             flavor2="0">
       </item>
       <item path="src/handler_udp/routing/type/route.h"

@@ -115,7 +115,7 @@ int routing_load_config(void *config) {
 			log_fatal("handler(%s) incorrect config", name);
 		} else {
 			printf(" - rout (%-10s): %-25s -> %s\n", name, source, remote);
-			route_register_config(name, source, remote);
+			route_register_config(strdup(name), strdup(source), strdup(remote));
 		}
 	}
 

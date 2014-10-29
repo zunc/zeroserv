@@ -226,7 +226,7 @@ int poll_term() {
 	return 0;
 }
 
-#define MAX_DELAY_MS 1000
+#define MAX_DELAY_MS 100
 
 int poll_do(int exp) {
 	int n, i, fd;
@@ -235,7 +235,7 @@ int poll_do(int exp) {
 	if (nbchanges)
 		fd_flush_changes();
 
-	if (exp > MAX_DELAY_MS)
+	if (!exp || (exp > MAX_DELAY_MS))
 		wait_time = MAX_DELAY_MS;
 	else
 		wait_time = exp;

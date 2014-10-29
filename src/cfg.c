@@ -34,6 +34,7 @@ int config_load(const char* file) {
 	config_init(&cfg);
 
 	if (!config_read_file(&cfg, file)) {
+		config_destroy(&cfg);
 		log_fatal("config_read_file: %s:%d - %s\n", config_error_file(&cfg),
 				config_error_line(&cfg), config_error_text(&cfg));
 	}
@@ -66,7 +67,8 @@ int config_load(const char* file) {
 				// extend config load for handler
 				if (handler->load_config)
 					handler->load_config(handler_cfg);
-				tcp_create_listener(name, port, handler);
+				char *sname = strdup(name);
+				tcp_create_listener(sname, port, handler);
 				// extend config load for handler
 				//
 			}
@@ -94,10 +96,11 @@ int config_load(const char* file) {
 				// extend config load for handler
 				if (handler->load_config)
 					handler->load_config(handler_cfg);
-				udp_create_listener(name, port, handler);
+				udp_create_listener(strdup(name), port, handler);
 			}
 		}
 	}
 
+	config_destroy(&cfg);
 	return 0;
 }

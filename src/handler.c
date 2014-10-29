@@ -4,8 +4,8 @@
 
 static struct list handlers = LIST_HEAD_INIT(handlers);
 
-void handler_register(struct handler *hd) {
-	LIST_ADDQ(&handlers, &hd->list);
+void handler_register(struct handler *h) {
+	LIST_ADDQ(&handlers, &h->list);
 }
 
 void handler_unregister(struct handler *hd) {

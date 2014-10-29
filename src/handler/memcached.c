@@ -226,6 +226,7 @@ static inline void process_get_command(int fd, token_t *tokens, size_t ntokens) 
 		add_out_string(fd, ITEM_key(it), it->nkey);
 		add_out_string(fd, ITEM_suffix(it), it->nsuffix + it->nbytes);
 		stats.get_hits++;
+		do_item_remove(it);
 	} else {
 		log_info("miss");
 		stats.get_misses++;
@@ -442,7 +443,6 @@ static void complete_nread(int fd) {
 	int comm = conn_data(fd)->item_comm;
 	int ret;
 
-	stats.set_cmds++;
 	char* data = ITEM_data(it);
 	if (strncmp(ITEM_data(it) + it->nbytes - 2, "\r\n", 2) != 0) {
 		out_string(fd, "CLIENT_ERROR bad data chunk");

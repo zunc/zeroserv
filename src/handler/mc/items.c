@@ -77,10 +77,9 @@ uint64_t get_cas_id() {
 /* Enable this for reference-count debugging. */
 #if 0
 #define DEBUG_REFCNT(it,op) \
-                fprintf(stderr, "item %x refcnt(%c) %d %c%c%c\n", \
+                fprintf(stderr, "item %x refcnt(%c) %d %c%c\n", \
                         it, op, it->refcount, \
                         (it->it_flags & ITEM_LINKED) ? 'L' : ' ', \
-                        (it->it_flags & ITEM_SLABBED) ? 'S' : ' ', \
                         (it->it_flags & ITEM_DELETED) ? 'D' : ' ')
 #else
 #define DEBUG_REFCNT(it,op) while(0)
@@ -183,8 +182,6 @@ void item_free(item *it) {
 	size_t ntotal = ITEM_ntotal(it);
 	unsigned int clsid;
 	assert((it->it_flags & ITEM_LINKED) == 0);
-	//    assert(it != heads[it->slabs_clsid]);
-	//    assert(it != tails[it->slabs_clsid]);
 	assert(it->refcount == 0);
 
 	/* so slab size changer can tell later if item is already free or not */
@@ -262,8 +259,8 @@ int do_item_link(item *it) {
 	assoc_insert(it);
 
 	stats.curr_bytes += ITEM_ntotal(it);
-	stats.curr_items += 1;
-	stats.total_items += 1;
+	stats.curr_items++;
+	stats.total_items++;
 
 	/* Allocate a new CAS ID on link. */
 	it->cas_id = get_cas_id();
@@ -277,10 +274,8 @@ void do_item_unlink(item *it) {
 	//    MEMCACHED_ITEM_UNLINK(ITEM_key(it), it->nbytes);
 	if ((it->it_flags & ITEM_LINKED) != 0) {
 		it->it_flags &= ~ITEM_LINKED;
-		STATS_LOCK();
-		//        stats.curr_bytes -= ITEM_ntotal(it);
-		//        stats.curr_items -= 1;
-		STATS_UNLOCK();
+		stats.curr_bytes -= ITEM_ntotal(it);
+		stats.curr_items--;
 		assoc_delete(ITEM_key(it), it->nkey);
 		item_unlink_q(it);
 		if (it->refcount == 0) item_free(it);
@@ -288,8 +283,6 @@ void do_item_unlink(item *it) {
 }
 
 void do_item_remove(item *it) {
-	//    MEMCACHED_ITEM_REMOVE(ITEM_key(it), it->nbytes);
-	//    assert((it->it_flags & ITEM_SLABBED) == 0);
 	if (it->refcount != 0) {
 		it->refcount--;
 		DEBUG_REFCNT(it, '-');
@@ -301,16 +294,13 @@ void do_item_remove(item *it) {
 }
 
 void do_item_update(item *it) {
-	//    MEMCACHED_ITEM_UPDATE(ITEM_key(it), it->nbytes);
-	//    if (it->time < current_time - ITEM_UPDATE_INTERVAL) {
-	//        assert((it->it_flags & ITEM_SLABBED) == 0);
-	//
-	//        if ((it->it_flags & ITEM_LINKED) != 0) {
-	//            item_unlink_q(it);
-	//            it->time = current_time;
-	//            item_link_q(it);
-	//        }
-	//    }
+	if (it->time < now_ms - ITEM_UPDATE_INTERVAL) {
+		if ((it->it_flags & ITEM_LINKED) != 0) {
+			item_unlink_q(it);
+			it->time = now_ms;
+			item_link_q(it);
+		}
+	}
 }
 
 int do_item_replace(item *it, item *new_it) {
@@ -456,15 +446,15 @@ item *do_item_get_notedeleted(const char *key, const size_t nkey, bool *delete_l
 			it = NULL;
 		}
 	}
-	//    if (it != NULL && settings.oldest_live != 0 && settings.oldest_live <= current_time &&
-	//        it->time <= settings.oldest_live) {
-	//        do_item_unlink(it);           /* MTSAFE - cache_lock held */
-	//        it = NULL;
-	//    }
-	//    if (it != NULL && it->exptime != 0 && it->exptime <= current_time) {
-	//        do_item_unlink(it);           /* MTSAFE - cache_lock held */
-	//        it = NULL;
-	//    }
+	if (it != NULL && settings.oldest_live != 0 && settings.oldest_live <= now_ms &&
+			it->time <= settings.oldest_live) {
+		do_item_unlink(it); /* MTSAFE - cache_lock held */
+		it = NULL;
+	}
+	if (it != NULL && it->exptime != 0 && it->exptime <= now_ms) {
+		do_item_unlink(it); /* MTSAFE - cache_lock held */
+		it = NULL;
+	}
 
 	if (it != NULL) {
 		it->refcount++;
