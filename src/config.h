@@ -14,6 +14,7 @@
 #define DEBUG		0
 
 #define JE_ALLOC	0
+#define LOG_COLOURED 1
 
 #endif	/* CONFIG_H */
 

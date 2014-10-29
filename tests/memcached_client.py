@@ -4,7 +4,7 @@ import sys
 import memcache
 import time
 
-NUM_STEP = 10
+NUM_STEP = 100000
 mcrouter = memcache.Client(["127.0.0.1:" + sys.argv[1]])
 
 def regionTest():
