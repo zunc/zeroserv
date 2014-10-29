@@ -30,10 +30,10 @@ char* get_formatted_time(void);
 
 #define clean_errno() (errno == 0 ? "None" : strerror(errno))
 
-#define log_err(format, ...) log(format, GREEN("ERR"), ## __VA_ARGS__)
+#define log_err(format, ...) log(format, GRAY("ERR"), ## __VA_ARGS__)
 #define log_fatal(format, ...) log(format, RED("FATAL"), ## __VA_ARGS__); exit(1)
 #define log_warn(format, ...) log(format, YELLOW("WARN"), ## __VA_ARGS__)
-#define log_info(format, ...) log(format, GRAY("INFO"), ## __VA_ARGS__)
+#define log_info(format, ...) log(format, GREEN("INFO"), ## __VA_ARGS__)
 
 #define log_dbg(format, ...) if (DEBUG) printf("[%s:%d] " format "\n", __FILE__, __LINE__, ## __VA_ARGS__)
 
