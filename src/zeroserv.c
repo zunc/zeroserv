@@ -18,7 +18,7 @@
 #include "task.h"
 
 const char cfg_default[] = "zero.cfg";
-
+static int _is_stop = 0;
 void dump(int sig) {
 	log_info("dump");
 }
@@ -32,13 +32,13 @@ void sig_dump_state(int sig) {
 }
 
 void sig_int(int sig) {
-	env_deinit();
-	exit(0);
+	_is_stop = 1;
+	log_info("[] SIG_INT");
 }
 
 void sig_term(int sig) {
-	env_deinit();
-	exit(0);
+	_is_stop = 1;
+	log_info("[] SIG_TERM");
 }
 
 int env_init() {
@@ -75,7 +75,7 @@ int proc_center() {
 		process_runnable_tasks(&next); // process task
 		poll_do(next); // event-loop for socket event
 		// check stop condition
-		if (0) {
+		if (_is_stop) {
 			break;
 		}
 	}

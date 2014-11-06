@@ -18,6 +18,7 @@
 #include "settings.h"
 #include "../../common/time.h"
 #include "stats.h"
+#include "assoc.h"
 
 struct stats stats;
 
@@ -111,6 +112,7 @@ item *do_item_alloc(char *key, const size_t nkey, const int flags, const rel_tim
 	char suffix[40];
 	size_t ntotal = item_make_header(nkey + 1, flags, nbytes, suffix, &nsuffix);
 
+	//[TODO] allocate management
 	it = zmalloc(ntotal);
 	if (it == 0) {
 		int tries = 50;
@@ -153,6 +155,8 @@ item *do_item_alloc(char *key, const size_t nkey, const int flags, const rel_tim
 		//                break;
 		//            }
 		//        }
+		
+		//[TODO] allocate management
 		it = zmalloc(ntotal);
 		if (it == 0) {
 			itemstats.outofmemory++;
@@ -189,6 +193,8 @@ void item_free(item *it) {
 	it->slabs_clsid = 0;
 	//    it->it_flags |= ITEM_SLABBED;
 	DEBUG_REFCNT(it, 'F');
+	
+	//[TODO] allocate management
 	zfree(it);
 }
 
@@ -429,7 +435,7 @@ char* do_item_stats_sizes(int *bytes) {
 	should be removed from the namespace */
 bool item_delete_lock_over(item *it) {
 	assert(it->it_flags & ITEM_DELETED);
-	//    return (current_time >= it->exptime);
+	//return (current_time >= it->exptime);
 	return 0;
 }
 

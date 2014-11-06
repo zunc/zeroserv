@@ -46,6 +46,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/handler/echo.o \
 	${OBJECTDIR}/src/handler/http.o \
 	${OBJECTDIR}/src/handler/mc/assoc.o \
+	${OBJECTDIR}/src/handler/mc/fat/slabs.o \
+	${OBJECTDIR}/src/handler/mc/fat/sto_layer.o \
 	${OBJECTDIR}/src/handler/mc/items.o \
 	${OBJECTDIR}/src/handler/memcached.o \
 	${OBJECTDIR}/src/handler_udp/echo_udp.o \
@@ -143,6 +145,16 @@ ${OBJECTDIR}/src/handler/mc/assoc.o: src/handler/mc/assoc.c
 	${MKDIR} -p ${OBJECTDIR}/src/handler/mc
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/mc/assoc.o src/handler/mc/assoc.c
+
+${OBJECTDIR}/src/handler/mc/fat/slabs.o: src/handler/mc/fat/slabs.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler/mc/fat
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/mc/fat/slabs.o src/handler/mc/fat/slabs.c
+
+${OBJECTDIR}/src/handler/mc/fat/sto_layer.o: src/handler/mc/fat/sto_layer.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler/mc/fat
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/mc/fat/sto_layer.o src/handler/mc/fat/sto_layer.c
 
 ${OBJECTDIR}/src/handler/mc/items.o: src/handler/mc/items.c 
 	${MKDIR} -p ${OBJECTDIR}/src/handler/mc

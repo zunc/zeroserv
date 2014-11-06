@@ -34,9 +34,9 @@ struct task * maintain_stat(struct task *t) {
 
 struct task * timeout(struct task *t) {
 	log_info("timeout");
-	int fd = (int) t->context;
-	free(t);
-	echo_disconnect(fd);
+//	int fd = (int) t->context;
+//	free(t);
+//	echo_disconnect(fd);
 	return NULL;
 }
 
@@ -46,16 +46,16 @@ int echo_accept(int fd) {
 	fdtab[fd].cb[DIR_RD].b = fdtab[fd].cb[DIR_WR].b = b;
 	printf("[%*d] connected\n", 4, fd);
 
-	// setup a task: drop connection in 5s
-	struct task *t = NULL;
-	if ((t = task_new()) == NULL)
-		return -1;
-
-	t->context = (void*) fd;
-	t->expire = tick_add(now_ms, S_TO_TICKS(20));
-	t->process = timeout;
-	task_queue(t);
-	fdtab[fd].context = t;
+//	// setup a task: drop connection in 5s
+//	struct task *t = NULL;
+//	if ((t = task_new()) == NULL)
+//		return -1;
+//
+//	t->context = (void*) fd;
+//	t->expire = tick_add(now_ms, S_TO_TICKS(20));
+//	t->process = timeout;
+//	task_queue(t);
+//	fdtab[fd].context = t;
 	_conn++;
 	return 0;
 }

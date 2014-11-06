@@ -20,6 +20,12 @@
       </logicalFolder>
       <logicalFolder name="f3" displayName="handler" projectFiles="true">
         <logicalFolder name="f1" displayName="mc" projectFiles="true">
+          <logicalFolder name="f2" displayName="fat" projectFiles="true">
+            <itemPath>src/handler/mc/fat/slabs.c</itemPath>
+            <itemPath>src/handler/mc/fat/slabs.h</itemPath>
+            <itemPath>src/handler/mc/fat/sto_layer.c</itemPath>
+            <itemPath>src/handler/mc/fat/sto_layer.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="f1" displayName="type" projectFiles="true">
             <itemPath>src/handler/mc/type/item.h</itemPath>
             <itemPath>src/handler/mc/type/setting.h</itemPath>
@@ -201,6 +207,14 @@
       </item>
       <item path="src/handler/mc/assoc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/handler/mc/fat/slabs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/slabs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/sto_layer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/sto_layer.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/handler/mc/items.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler/mc/items.h" ex="false" tool="3" flavor2="0">
@@ -341,6 +355,12 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <output>bin/zeroserv</output>
+          <linkerLibItems>
+            <linkerOptionItem>-lconfig</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="src/buffer.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -409,6 +429,14 @@
       <item path="src/handler/mc/assoc.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler/mc/assoc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/slabs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/slabs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/sto_layer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/sto_layer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/handler/mc/items.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -529,6 +557,218 @@
       <item path="src/util.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/zeroserv.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_zalloc" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <linkerTool>
+          <output>bin/zeroservd</output>
+          <linkerLibItems>
+            <linkerLibFileItem>../zalloc/bin/zallocd.so</linkerLibFileItem>
+            <linkerOptionItem>-lconfig</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="src/buffer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/cfg.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/cfg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/client.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/client.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/compiler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/mini-clist.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/netutil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/ticks.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/common/ticks.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/time.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/uthash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/compiler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/config.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/connection.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/dbg.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/dbg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ebtree/compiler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ebtree/eb32tree.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/ebtree/eb32tree.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ebtree/ebtree.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/ebtree/ebtree.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/fd.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/fd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/global.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/echo.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler/echo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler/http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/assoc.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler/mc/assoc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/slabs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/slabs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/sto_layer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/mc/fat/sto_layer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/items.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler/mc/items.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/settings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/stats.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/type/item.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/type/setting.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/mc/util.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/memcached.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler_udp/routing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/local_port.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="src/handler_udp/routing/local_port.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/mineip.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/handler_udp/routing/mineip.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/proto_routing.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="src/handler_udp/routing/proto_routing.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/route_map.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="src/handler_udp/routing/route_map.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/route.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/handler_udp/routing/type/routing.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/mini-clist.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/poller.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/poller.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/proto_tcp.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/proto_tcp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/proto_udp.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/proto_udp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/protos.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/protos.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/signal.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/signal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/task.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/time.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/time.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/type/buffer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/type/fd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/type/proto_handler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/type/protocols.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/type/signal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/type/task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/type/type.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/util.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/util.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/zeroserv.c" ex="false" tool="0" flavor2="9">
       </item>
     </conf>
   </confs>
