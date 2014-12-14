@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ */
 
 /*
  * Using a mix of milliseconds and timeval for internal timers is expensive and
@@ -64,84 +64,75 @@
 #define TICKS_TO_MS(tk) (tk)
 
 /* return 1 if tick is set, otherwise 0 */
-static inline int tick_isset(int expire)
-{
-	return expire != 0;
+static inline int tick_isset(int expire) {
+    return expire != 0;
 }
 
 /* Add <timeout> to <now>, and return the resulting expiration date.
  * <timeout> will not be checked for null values.
  */
-static inline int tick_add(int now, int timeout)
-{
-	now += timeout;
-	if (unlikely(!now))
-		now++;    /* unfortunate value */
-	return now;
+static inline int tick_add(int now, int timeout) {
+    now += timeout;
+    if (unlikely(!now))
+        now++; /* unfortunate value */
+    return now;
 }
 
 /* add <timeout> to <now> if it is set, otherwise set it to eternity.
  * Return the resulting expiration date.
  */
-static inline int tick_add_ifset(int now, int timeout)
-{
-	if (!timeout)
-		return TICK_ETERNITY;
-	return tick_add(now, timeout);
+static inline int tick_add_ifset(int now, int timeout) {
+    if (!timeout)
+        return TICK_ETERNITY;
+    return tick_add(now, timeout);
 }
 
 /* return 1 if timer <t1> is before <t2>, none of which can be infinite. */
-static inline int tick_is_lt(int t1, int t2)
-{
-	return (t1 - t2) < 0;
+static inline int tick_is_lt(int t1, int t2) {
+    return (t1 - t2) < 0;
 }
 
 /* return 1 if timer <t1> is before or equal to <t2>, none of which can be infinite. */
-static inline int tick_is_le(int t1, int t2)
-{
-	return (t1 - t2) <= 0;
+static inline int tick_is_le(int t1, int t2) {
+    return (t1 - t2) <= 0;
 }
 
 /* return 1 if timer <timer> is expired at date <now>, otherwise zero */
-static inline int tick_is_expired(int timer, int now)
-{
-	if (unlikely(!tick_isset(timer)))
-		return 0;
-	if (unlikely((timer - now) <= 0))
-		return 1;
-	return 0;
+static inline int tick_is_expired(int timer, int now) {
+    if (unlikely(!tick_isset(timer)))
+        return 0;
+    if (unlikely((timer - now) <= 0))
+        return 1;
+    return 0;
 }
 
 /* return the first one of the two timers, both of which may be infinite */
-static inline int tick_first(int t1, int t2)
-{
-	if (!tick_isset(t1))
-		return t2;
-	if (!tick_isset(t2))
-		return t1;
-	if ((t1 - t2) <= 0)
-		return t1;
-	else
-		return t2;
+static inline int tick_first(int t1, int t2) {
+    if (!tick_isset(t1))
+        return t2;
+    if (!tick_isset(t2))
+        return t1;
+    if ((t1 - t2) <= 0)
+        return t1;
+    else
+        return t2;
 }
 
 /* return the first one of the two timers, where only the first one may be infinite */
-static inline int tick_first_2nz(int t1, int t2)
-{
-	if (!tick_isset(t1))
-		return t2;
-	if ((t1 - t2) <= 0)
-		return t1;
-	else
-		return t2;
+static inline int tick_first_2nz(int t1, int t2) {
+    if (!tick_isset(t1))
+        return t2;
+    if ((t1 - t2) <= 0)
+        return t1;
+    else
+        return t2;
 }
 
 /* return the number of ticks remaining from <now> to <exp>, or zero if expired */
-static inline int tick_remain(int now, int exp)
-{
-	if (tick_is_expired(exp, now))
-		return 0;
-	return exp - now;
+static inline int tick_remain(int now, int exp) {
+    if (tick_is_expired(exp, now))
+        return 0;
+    return exp - now;
 }
 
 #endif /* _COMMON_TICKS_H */

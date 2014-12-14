@@ -11,9 +11,9 @@
 #include "../../common/uthash.h"
 
 struct local_port {
-	unsigned int id;
-	void *context;
-	UT_hash_handle hh;
+    unsigned int id;
+    void *context;
+    UT_hash_handle hh;
 };
 
 struct local_port * register_virtual_port();

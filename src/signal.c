@@ -30,29 +30,29 @@ struct signal_descriptor signal_state[MAX_SIGNAL];
 sigset_t blocked_sig;
 
 void signal_init() {
-	signal_queue_len = 0;
-	memset(signal_queue, 0, sizeof (signal_queue));
-	memset(signal_state, 0, sizeof (signal_state));
-	sigfillset(&blocked_sig);
+    signal_queue_len = 0;
+    memset(signal_queue, 0, sizeof (signal_queue));
+    memset(signal_state, 0, sizeof (signal_state));
+    sigfillset(&blocked_sig);
 }
 
 void signal_handler(int sig) {
-	if (sig < 0 || sig >= MAX_SIGNAL || !signal_state[sig].handler) {
-		/* unhandled signal */
-		log_warn("Received unhandled signal %d. Signal has been disabled.\n", sig);
-		signal(sig, SIG_IGN);
-		return;
-	}
+    if (sig < 0 || sig >= MAX_SIGNAL || !signal_state[sig].handler) {
+        /* unhandled signal */
+        log_warn("Received unhandled signal %d. Signal has been disabled.\n", sig);
+        signal(sig, SIG_IGN);
+        return;
+    }
 
-	if (!signal_state[sig].count) {
-		/* signal was not queued yet */
-		if (signal_queue_len < MAX_SIGNAL)
-			signal_queue[signal_queue_len++] = sig;
-		else
-			log_warn("Signal %d : signal queue is unexpectedly full.\n", sig);
-	}
-	signal_state[sig].count++;
-	signal(sig, signal_handler); /* re-arm signal */
+    if (!signal_state[sig].count) {
+        /* signal was not queued yet */
+        if (signal_queue_len < MAX_SIGNAL)
+            signal_queue[signal_queue_len++] = sig;
+        else
+            log_warn("Signal %d : signal queue is unexpectedly full.\n", sig);
+    }
+    signal_state[sig].count++;
+    signal(sig, signal_handler); /* re-arm signal */
 }
 
 /* Register a handler for signal <sig>. Set it to NULL, SIG_DFL or SIG_IGN to
@@ -62,22 +62,22 @@ void signal_handler(int sig) {
  * the signal itself (it can disable it however).
  */
 void signal_register(int sig, void (*handler)(int)) {
-	if (sig < 0 || sig >= MAX_SIGNAL) {
-		log_warn("Failed to register signal %d : out of range [0..%d].\n", sig, MAX_SIGNAL);
-		return;
-	}
+    if (sig < 0 || sig >= MAX_SIGNAL) {
+        log_warn("Failed to register signal %d : out of range [0..%d].\n", sig, MAX_SIGNAL);
+        return;
+    }
 
-	signal_state[sig].count = 0;
-	if (handler == NULL)
-		handler = SIG_IGN;
+    signal_state[sig].count = 0;
+    if (handler == NULL)
+        handler = SIG_IGN;
 
-	if (handler != SIG_IGN && handler != SIG_DFL) {
-		signal_state[sig].handler = handler;
-		signal(sig, signal_handler);
-	} else {
-		signal_state[sig].handler = NULL;
-		signal(sig, handler);
-	}
+    if (handler != SIG_IGN && handler != SIG_DFL) {
+        signal_state[sig].handler = handler;
+        signal(sig, signal_handler);
+    } else {
+        signal_state[sig].handler = NULL;
+        signal(sig, handler);
+    }
 }
 
 /* Call handlers of all pending signals and clear counts and queue length. The
@@ -87,24 +87,24 @@ void signal_register(int sig, void (*handler)(int)) {
  * queue length before getting here.
  */
 void __signal_process_queue() {
-	int sig, cur_pos = 0;
-	struct signal_descriptor *desc;
-	sigset_t old_sig;
+    int sig, cur_pos = 0;
+    struct signal_descriptor *desc;
+    sigset_t old_sig;
 
-	/* block signal delivery during processing */
-	sigprocmask(SIG_SETMASK, &blocked_sig, &old_sig);
+    /* block signal delivery during processing */
+    sigprocmask(SIG_SETMASK, &blocked_sig, &old_sig);
 
-	for (cur_pos = 0; cur_pos < signal_queue_len; cur_pos++) {
-		sig = signal_queue[cur_pos];
-		desc = &signal_state[sig];
-		if (desc->count) {
-			if (desc->handler)
-				desc->handler(sig);
-			desc->count = 0;
-		}
-	}
-	signal_queue_len = 0;
+    for (cur_pos = 0; cur_pos < signal_queue_len; cur_pos++) {
+        sig = signal_queue[cur_pos];
+        desc = &signal_state[sig];
+        if (desc->count) {
+            if (desc->handler)
+                desc->handler(sig);
+            desc->count = 0;
+        }
+    }
+    signal_queue_len = 0;
 
-	/* restore signal delivery */
-	sigprocmask(SIG_SETMASK, &old_sig, NULL);
+    /* restore signal delivery */
+    sigprocmask(SIG_SETMASK, &old_sig, NULL);
 }

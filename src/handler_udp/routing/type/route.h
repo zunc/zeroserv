@@ -19,15 +19,15 @@
 // route node tcpv4
 
 struct route {
-	char name[ROUT_BUF];
+    char name[ROUT_BUF];
 
-	char dest[ROUT_BUF]; // source by string
-	regex_t *rex_dest; // source compiled by regex 
+    char dest[ROUT_BUF]; // source by string
+    regex_t *rex_dest; // source compiled by regex 
 
-	char remote[ROUT_BUF]; // remote by string
-	struct sockaddr_in s_remote;
+    char remote[ROUT_BUF]; // remote by string
+    struct sockaddr_in s_remote;
 
-	struct list list; // list
+    struct list list; // list
 };
 
 #endif	/* ROUTE_H */

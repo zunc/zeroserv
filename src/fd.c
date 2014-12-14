@@ -27,30 +27,30 @@ int totalconn; /* total # of terminated sessions */
 int actconn; /* # of active sessions */
 
 void fd_delete(int fd) {
-	EV_FD_CLO(fd);
-	close(fd);
-	fdtab[fd].state = FD_STCLOSE;
+    EV_FD_CLO(fd);
+    close(fd);
+    fdtab[fd].state = FD_STCLOSE;
 
-	while ((maxfd - 1 >= 0) && (fdtab[maxfd - 1].state == FD_STCLOSE))
-		maxfd--;
+    while ((maxfd - 1 >= 0) && (fdtab[maxfd - 1].state == FD_STCLOSE))
+        maxfd--;
 }
 
 void fd_insert(int fd) {
-	//	fdtab[fd].ev = 0;
-	if (fd + 1 > maxfd)
-		maxfd = fd + 1;
+    //	fdtab[fd].ev = 0;
+    if (fd + 1 > maxfd)
+        maxfd = fd + 1;
 }
 
 int fd_init(int maxsock) {
-	int i;
-	fdtab = (struct fdtab *) malloc(sizeof (struct fdtab) * maxsock);
-	if (!fdtab) {
-		log_fatal("malloc fail: maxsock(%d)\n", maxsock);
-		return -1;
-	}
+    int i;
+    fdtab = (struct fdtab *) malloc(sizeof (struct fdtab) * maxsock);
+    if (!fdtab) {
+        log_fatal("malloc fail: maxsock(%d)\n", maxsock);
+        return -1;
+    }
 
-	for (i = 0; i < global.maxsock; i++) {
-		fdtab[i].state = FD_STCLOSE;
-	}
-	return maxsock;
+    for (i = 0; i < global.maxsock; i++) {
+        fdtab[i].state = FD_STCLOSE;
+    }
+    return maxsock;
 }

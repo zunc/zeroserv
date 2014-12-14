@@ -26,34 +26,34 @@
 // ref: http://en.wikipedia.org/wiki/Jenkins_hash_function
 
 uint32_t jenkins_hash(uint8_t *key, size_t len) {
-	uint32_t hash, i;
-	for (hash = i = 0; i < len; ++i) {
-		hash += key[i];
-		hash += (hash << 10);
-		hash ^= (hash >> 6);
-	}
-	hash += (hash << 3);
-	hash ^= (hash >> 11);
-	hash += (hash << 15);
-	return hash;
+    uint32_t hash, i;
+    for (hash = i = 0; i < len; ++i) {
+        hash += key[i];
+        hash += (hash << 10);
+        hash ^= (hash >> 6);
+    }
+    hash += (hash << 3);
+    hash ^= (hash >> 11);
+    hash += (hash << 15);
+    return hash;
 }
 
 int make_socket_non_blocking(int sfd) {
-	int flags, s;
+    int flags, s;
 
-	flags = fcntl(sfd, F_GETFL, 0);
-	if (flags == -1) {
-		log_err("fcntl");
-		return -1;
-	}
+    flags = fcntl(sfd, F_GETFL, 0);
+    if (flags == -1) {
+        log_err("fcntl");
+        return -1;
+    }
 
-	flags |= O_NONBLOCK;
-	s = fcntl(sfd, F_SETFL, flags);
-	if (s == -1) {
-		log_err("fcntl");
-		return -1;
-	}
-	return 0;
+    flags |= O_NONBLOCK;
+    s = fcntl(sfd, F_SETFL, flags);
+    if (s == -1) {
+        log_err("fcntl");
+        return -1;
+    }
+    return 0;
 }
 
 unsigned int crc32(unsigned int crc, const char *buf, size_t len) {

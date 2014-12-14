@@ -18,11 +18,11 @@ int echo_read(int fd);
 int echo_write(int fd);
 
 static struct handler handler_echo = {
-	.name = "echo",
-	.accept = echo_accept,
-	.disconnect = echo_disconnect,
-	.read = echo_read,
-	.write = echo_write
+    .name = "echo",
+    .accept = echo_accept,
+    .disconnect = echo_disconnect,
+    .read = echo_read,
+    .write = echo_write
 };
 
 #endif	/* HANDLER_HELLO_H */

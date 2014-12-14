@@ -13,39 +13,40 @@
 #include <stdlib.h>
 
 inline static int buffer_empty(struct buffer *b) {
-	return (b->r == b->curr);
+    return (b->r == b->curr);
 }
 
 // use it care, leak memory risk
+
 inline static void buffer_init(struct buffer *b, int total) {
-	b->buff = malloc(total);
-	b->total = total;
-	b->curr = b->r = b->buff;
+    b->buff = malloc(total);
+    b->total = total;
+    b->curr = b->r = b->buff;
 }
 
 inline static void buffer_free(struct buffer *b) {
-	FREE(b->buff);
-	FREE(b);
+    FREE(b->buff);
+    FREE(b);
 }
 
 inline static void buffer_reset(struct buffer *b) {
-	b->curr = b->r = b->buff;
+    b->curr = b->r = b->buff;
 }
 
 inline static int buffer_remain_read(struct buffer *b) {
-	return (b->r - b->curr);
+    return (b->r - b->curr);
 }
 
 inline static int buffer_remain_write(struct buffer *b) {
-	return (b->total - (b->r - b->buff));
+    return (b->total - (b->r - b->buff));
 }
 
 inline static int buffer_write_bytes(struct buffer *b) {
-	return (b->r - b->buff);
+    return (b->r - b->buff);
 }
 
 inline static int buffer_read_bytes(struct buffer *b) {
-	return (b->curr - b->buff);
+    return (b->curr - b->buff);
 }
 
 #endif	/* BUFFER_H */

@@ -5,20 +5,20 @@
 static struct list handlers = LIST_HEAD_INIT(handlers);
 
 void handler_register(struct handler *h) {
-	LIST_ADDQ(&handlers, &h->list);
+    LIST_ADDQ(&handlers, &h->list);
 }
 
 void handler_unregister(struct handler *hd) {
-	LIST_DEL(&hd->list);
-	LIST_INIT(&hd->list);
+    LIST_DEL(&hd->list);
+    LIST_INIT(&hd->list);
 }
 
 struct handler* handler_get(const char* name) {
-	struct handler *hd;
+    struct handler *hd;
 
-	list_for_each_entry(hd, &handlers, list) {
-		if (!strcmp(hd->name, name))
-			return hd;
-	}
-	return 0;
+    list_for_each_entry(hd, &handlers, list) {
+        if (!strcmp(hd->name, name))
+            return hd;
+    }
+    return 0;
 }

@@ -18,11 +18,11 @@ int echo_udp_read(int fd);
 int echo_udp_write(int fd);
 
 static struct handler handler_echo_udp = {
-	.name = "echo_udp",
-	.init = echo_udp_init,
-	.deinit = echo_udp_deinit,
-	.read = echo_udp_read,
-	.write = echo_udp_write
+    .name = "echo_udp",
+    .init = echo_udp_init,
+    .deinit = echo_udp_deinit,
+    .read = echo_udp_read,
+    .write = echo_udp_write
 };
 
 #endif	/* ECHO_UDP_H */

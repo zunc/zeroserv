@@ -19,10 +19,9 @@ void signal_handler(int sig);
 void signal_register(int sig, void (*handler)(int));
 void __signal_process_queue();
 
-static inline void signal_process_queue()
-{
-	if (signal_queue_len > 0)
-		__signal_process_queue();
+static inline void signal_process_queue() {
+    if (signal_queue_len > 0)
+        __signal_process_queue();
 }
 
 #endif	/* SIGNAL_H */

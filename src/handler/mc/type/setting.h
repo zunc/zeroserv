@@ -9,8 +9,8 @@
 #define	SETTING_H
 
 struct mc_setting {
-	uint64_t max_mem;
-	uint64_t max_disk;
+    uint64_t max_mem;
+    uint64_t max_disk;
 };
 
 #endif	/* SETTING_H */

@@ -78,34 +78,32 @@
 #define TIMER_LOOK_BACK       (1U << 31)
 
 /* a few exported variables */
-extern unsigned int nb_tasks;     /* total number of tasks */
-extern unsigned int run_queue;    /* run queue size */
+extern unsigned int nb_tasks; /* total number of tasks */
+extern unsigned int run_queue; /* run queue size */
 extern unsigned int run_queue_cur;
 extern unsigned int nb_tasks_cur;
-extern unsigned int niced_tasks;  /* number of niced tasks in the run queue */
+extern unsigned int niced_tasks; /* number of niced tasks in the run queue */
 //extern struct pool_head *pool2_task;
-extern struct eb32_node *last_timer;   /* optimization: last queued timer */
+extern struct eb32_node *last_timer; /* optimization: last queued timer */
 
 /* return 0 if task is in run queue, otherwise non-zero */
-static inline int task_in_rq(struct task *t)
-{
-	return t->rq.node.leaf_p != NULL;
+static inline int task_in_rq(struct task *t) {
+    return t->rq.node.leaf_p != NULL;
 }
 
 /* return 0 if task is in wait queue, otherwise non-zero */
-static inline int task_in_wq(struct task *t)
-{
-	return t->wq.node.leaf_p != NULL;
+static inline int task_in_wq(struct task *t) {
+    return t->wq.node.leaf_p != NULL;
 }
 
 /* puts the task <t> in run queue with reason flags <f>, and returns <t> */
 struct task *__task_wakeup(struct task *t);
-static inline struct task *task_wakeup(struct task *t, unsigned int f)
-{
-	if (likely(!task_in_rq(t)))
-		__task_wakeup(t);
-	t->state |= f;
-	return t;
+
+static inline struct task *task_wakeup(struct task *t, unsigned int f) {
+    if (likely(!task_in_rq(t)))
+        __task_wakeup(t);
+    t->state |= f;
+    return t;
 }
 
 /*
@@ -114,19 +112,17 @@ static inline struct task *task_wakeup(struct task *t, unsigned int f)
  * be in the wait queue before calling this function. If unsure, use the safer
  * task_unlink_wq() function.
  */
-static inline struct task *__task_unlink_wq(struct task *t)
-{
-	eb32_delete(&t->wq);
-	if (last_timer == &t->wq)
-		last_timer = NULL;
-	return t;
+static inline struct task *__task_unlink_wq(struct task *t) {
+    eb32_delete(&t->wq);
+    if (last_timer == &t->wq)
+        last_timer = NULL;
+    return t;
 }
 
-static inline struct task *task_unlink_wq(struct task *t)
-{
-	if (likely(task_in_wq(t)))
-		__task_unlink_wq(t);
-	return t;
+static inline struct task *task_unlink_wq(struct task *t) {
+    if (likely(task_in_wq(t)))
+        __task_unlink_wq(t);
+    return t;
 }
 
 /*
@@ -135,31 +131,28 @@ static inline struct task *task_unlink_wq(struct task *t)
  * *must* already be in the wait queue before calling this function. If unsure,
  * use the safer task_unlink_rq() function.
  */
-static inline struct task *__task_unlink_rq(struct task *t)
-{
-	eb32_delete(&t->rq);
-	run_queue--;
-	if (likely(t->nice))
-		niced_tasks--;
-	return t;
+static inline struct task *__task_unlink_rq(struct task *t) {
+    eb32_delete(&t->rq);
+    run_queue--;
+    if (likely(t->nice))
+        niced_tasks--;
+    return t;
 }
 
-static inline struct task *task_unlink_rq(struct task *t)
-{
-	if (likely(task_in_rq(t)))
-		__task_unlink_rq(t);
-	return t;
+static inline struct task *task_unlink_rq(struct task *t) {
+    if (likely(task_in_rq(t)))
+        __task_unlink_rq(t);
+    return t;
 }
 
 /*
  * Unlinks the task and adjusts run queue stats.
  * A pointer to the task itself is returned.
  */
-static inline struct task *task_delete(struct task *t)
-{
-	task_unlink_wq(t);
-	task_unlink_rq(t);
-	return t;
+static inline struct task *task_delete(struct task *t) {
+    task_unlink_wq(t);
+    task_unlink_rq(t);
+    return t;
 }
 
 /*
@@ -167,14 +160,13 @@ static inline struct task *task_delete(struct task *t)
  * state).  The task is returned. This function should not be used outside of
  * task_new().
  */
-static inline struct task *task_init(struct task *t)
-{
-	t->wq.node.leaf_p = NULL;
-	t->rq.node.leaf_p = NULL;
-	t->state = TASK_SLEEPING;
-	t->nice = 0;
-	t->calls = 0;
-	return t;
+static inline struct task *task_init(struct task *t) {
+    t->wq.node.leaf_p = NULL;
+    t->rq.node.leaf_p = NULL;
+    t->state = TASK_SLEEPING;
+    t->nice = 0;
+    t->calls = 0;
+    return t;
 }
 
 /*
@@ -182,63 +174,60 @@ static inline struct task *task_init(struct task *t)
  * case of lack of memory. The task count is incremented. Tasks should only
  * be allocated this way, and must be freed using task_free().
  */
-static inline struct task *task_new(void)
-{
-	struct task *t = malloc(sizeof(struct task));
-	if (t) {
-		nb_tasks++;
-		task_init(t);
-	}
-	return t;
+static inline struct task *task_new(void) {
+    struct task *t = malloc(sizeof (struct task));
+    if (t) {
+        nb_tasks++;
+        task_init(t);
+    }
+    return t;
 }
 
 /*
  * Free a task. Its context must have been freed since it will be lost.
  * The task count is decremented.
  */
-static inline void task_free(struct task *t)
-{
-	free(t);
-	nb_tasks--;
+static inline void task_free(struct task *t) {
+    free(t);
+    nb_tasks--;
 }
 
 /* Place <task> into the wait queue, where it may already be. If the expiration
  * timer is infinite, do nothing and rely on wake_expired_task to clean up.
  */
 void __task_queue(struct task *task);
-static inline void task_queue(struct task *task)
-{
-	/* If we already have a place in the wait queue no later than the
-	 * timeout we're trying to set, we'll stay there, because it is very
-	 * unlikely that we will reach the timeout anyway. If the timeout
-	 * has been disabled, it's useless to leave the queue as well. We'll
-	 * rely on wake_expired_tasks() to catch the node and move it to the
-	 * proper place should it ever happen. Finally we only add the task
-	 * to the queue if it was not there or if it was further than what
-	 * we want.
-	 */
-	if (!tick_isset(task->expire))
-		return;
 
-	if (!task_in_wq(task) || tick_is_lt(task->expire, task->wq.key))
-		__task_queue(task);
+static inline void task_queue(struct task *task) {
+    /* If we already have a place in the wait queue no later than the
+     * timeout we're trying to set, we'll stay there, because it is very
+     * unlikely that we will reach the timeout anyway. If the timeout
+     * has been disabled, it's useless to leave the queue as well. We'll
+     * rely on wake_expired_tasks() to catch the node and move it to the
+     * proper place should it ever happen. Finally we only add the task
+     * to the queue if it was not there or if it was further than what
+     * we want.
+     */
+    if (!tick_isset(task->expire))
+        return;
+
+    if (!task_in_wq(task) || tick_is_lt(task->expire, task->wq.key))
+        __task_queue(task);
 }
 
 /* Ensure <task> will be woken up at most at <when>. If the task is already in
  * the run queue (but not running), nothing is done. It may be used that way
  * with a delay :  task_schedule(task, tick_add(now_ms, delay));
  */
-static inline void task_schedule(struct task *task, int when)
-{
-	if (task_in_rq(task))
-		return;
+static inline void task_schedule(struct task *task, int when) {
+    if (task_in_rq(task))
+        return;
 
-	if (task_in_wq(task))
-		when = tick_first(when, task->expire);
+    if (task_in_wq(task))
+        when = tick_first(when, task->expire);
 
-	task->expire = when;
-	if (!task_in_wq(task) || tick_is_lt(task->expire, task->wq.key))
-		__task_queue(task);
+    task->expire = when;
+    if (!task_in_wq(task) || tick_is_lt(task->expire, task->wq.key))
+        __task_queue(task);
 }
 
 /*

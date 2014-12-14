@@ -19,26 +19,26 @@ int routing_write(int fd);
 int routing_load_config(void *config);
 
 static struct handler handler_routing = {
-	.name = "router",
-	.init = routing_init,
-	.deinit = routing_deinit,
-	.read = routing_read,
-	.write = routing_write,
-	.load_config = routing_load_config
+    .name = "router",
+    .init = routing_init,
+    .deinit = routing_deinit,
+    .read = routing_read,
+    .write = routing_write,
+    .load_config = routing_load_config
 };
 
 struct router_setting {
-	int retry;
-	int timeout;
-	int max_packet;
-	char *layer;
+    int retry;
+    int timeout;
+    int max_packet;
+    char *layer;
 };
 
 struct router_stat {
-	uint64_t recv;
-	uint64_t broken;
-	uint64_t retries;
-	uint64_t drop;
+    uint64_t recv;
+    uint64_t broken;
+    uint64_t retries;
+    uint64_t drop;
 };
 
 extern struct router_setting router_setting;

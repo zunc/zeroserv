@@ -28,44 +28,44 @@
 #include "buffer.h"
 
 int event_accept(int fd) {
-	int s;
-	struct sockaddr in_addr;
-	socklen_t in_len;
-	int nfd;
+    int s;
+    struct sockaddr in_addr;
+    socklen_t in_len;
+    int nfd;
 
-	in_len = sizeof in_addr;
-	nfd = accept(fd, &in_addr, &in_len);
+    in_len = sizeof in_addr;
+    nfd = accept(fd, &in_addr, &in_len);
 
-	log_info("accept: %d", nfd);
-	if (nfd < 0) {
-		// printf("errno=%d, EAGAIN=%d, EWOULDBLOCK=%d\n", errno, EAGAIN, EWOULDBLOCK);
-		if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
-			//			log_warn("EAGAIN");
-			return;
-		} else {
-			//			log_warn("accept");
-			return;
-		}
-	}
+    log_info("accept: %d", nfd);
+    if (nfd < 0) {
+        // printf("errno=%d, EAGAIN=%d, EWOULDBLOCK=%d\n", errno, EAGAIN, EWOULDBLOCK);
+        if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+            //			log_warn("EAGAIN");
+            return;
+        } else {
+            //			log_warn("accept");
+            return;
+        }
+    }
 
-	/* Make the incoming socket non-blocking and add it to the
-	 * list of fds to monitor. */
-	s = make_socket_non_blocking(nfd);
-	if (s < 0) {
-		log_warn("make_socket_non_blocking: %d", nfd);
-	}
+    /* Make the incoming socket non-blocking and add it to the
+     * list of fds to monitor. */
+    s = make_socket_non_blocking(nfd);
+    if (s < 0) {
+        log_warn("make_socket_non_blocking: %d", nfd);
+    }
 
-	//--- add to poller : infd
-	struct listener *listen = (struct listener *) fdtab[fd].owner;
-	fd_insert(nfd);
+    //--- add to poller : infd
+    struct listener *listen = (struct listener *) fdtab[fd].owner;
+    fd_insert(nfd);
 
-	listen->handler->accept(nfd);
-	fdtab[nfd].cb[DIR_RD].f = listen->handler->read;
-	fdtab[nfd].cb[DIR_WR].f = listen->handler->write;
+    listen->handler->accept(nfd);
+    fdtab[nfd].cb[DIR_RD].f = listen->handler->read;
+    fdtab[nfd].cb[DIR_WR].f = listen->handler->write;
 
-	fdtab[nfd].state = FD_STCONN;
-	fdtab[nfd].flags = FD_FL_TCP;
-	fdtab[nfd].owner = fdtab[fd].owner;
-	EV_FD_SET(nfd, DIR_RD);
-	return 0;
+    fdtab[nfd].state = FD_STCONN;
+    fdtab[nfd].flags = FD_FL_TCP;
+    fdtab[nfd].owner = fdtab[fd].owner;
+    EV_FD_SET(nfd, DIR_RD);
+    return 0;
 }

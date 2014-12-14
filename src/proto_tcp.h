@@ -20,20 +20,20 @@ int tcp_enable(struct protocol *proto);
 int tcp_create_listener(char *name, int port, struct handler *handler);
 
 static struct protocol proto_tcpv4 = {
-	.name = "tcp_socket",
-	.sock_domain = AF_INET,
-	.sock_type = SOCK_STREAM,
-	.sock_prot = IPPROTO_TCP,
-	.sock_family = AF_INET,
-	.sock_addrlen = sizeof (struct sockaddr_in),
-	.l3_addrlen = 32 / 8,
-	.read = &tcp_recv,
-	.write = &tcp_write,
-	.bind_all = tcp_bind_listeners,
-	.unbind_all = tcp_unbind,
-	.enable_all = tcp_enable,
-	.listeners = LIST_HEAD_INIT(proto_tcpv4.listeners),
-	.nb_listeners = 0,
+    .name = "tcp_socket",
+    .sock_domain = AF_INET,
+    .sock_type = SOCK_STREAM,
+    .sock_prot = IPPROTO_TCP,
+    .sock_family = AF_INET,
+    .sock_addrlen = sizeof (struct sockaddr_in),
+    .l3_addrlen = 32 / 8,
+    .read = &tcp_recv,
+    .write = &tcp_write,
+    .bind_all = tcp_bind_listeners,
+    .unbind_all = tcp_unbind,
+    .enable_all = tcp_enable,
+    .listeners = LIST_HEAD_INIT(proto_tcpv4.listeners),
+    .nb_listeners = 0,
 };
 
 #endif	/* PROTO_RAW_H */

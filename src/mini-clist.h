@@ -15,8 +15,8 @@
  * cast as a single linked list or pointer.
  */
 struct list {
-    struct list *n;	/* next */
-    struct list *p;	/* prev */
+    struct list *n; /* next */
+    struct list *p; /* prev */
 };
 
 /* a back-ref is a pointer to a target list entry. It is used to detect when an
@@ -29,21 +29,21 @@ struct list {
  * used as the mark for next iteration.
  */
 struct bref {
-	struct list users;
-	struct list *ref; /* pointer to the target's list entry */
+    struct list users;
+    struct list *ref; /* pointer to the target's list entry */
 };
 
 /* a word list is a generic list with a pointer to a string in each element. */
 struct wordlist {
-	struct list list;
-	char *s;
+    struct list list;
+    char *s;
 };
 
 /* this is the same as above with an additional pointer to a condition. */
 struct cond_wordlist {
-	struct list list;
-	void *cond;
-	char *s;
+    struct list list;
+    void *cond;
+    char *s;
 };
 
 /* First undefine some macros which happen to also be defined on OpenBSD,
@@ -178,7 +178,7 @@ struct cond_wordlist {
  * the list is passed in <list_head>. No temporary variable is needed. Note
  * that <item> must not be modified during the loop.
  * Example: list_for_each_entry(cur_acl, known_acl, list) { ... };
- */ 
+ */
 #define list_for_each_entry(item, list_head, member)                      \
 	for (item = LIST_ELEM((list_head)->n, typeof(item), member);     \
 	     &item->member != (list_head);                                \
@@ -191,7 +191,7 @@ struct cond_wordlist {
  * the list is passed in <list_head>. A temporary variable <back> of same type
  * as <item> is needed so that <item> may safely be deleted if needed.
  * Example: list_for_each_entry_safe(cur_acl, tmp, known_acl, list) { ... };
- */ 
+ */
 #define list_for_each_entry_safe(item, back, list_head, member)           \
 	for (item = LIST_ELEM((list_head)->n, typeof(item), member),     \
 	     back = LIST_ELEM(item->member.n, typeof(item), member);     \

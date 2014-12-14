@@ -19,97 +19,98 @@
 
 const char cfg_default[] = "zero.cfg";
 static int _is_stop = 0;
+
 void dump(int sig) {
-	log_info("dump");
+    log_info("dump");
 }
 
 void sig_soft_stop(int sig) {
-	log_info("sig_soft_stop");
+    log_info("sig_soft_stop");
 }
 
 void sig_dump_state(int sig) {
-	log_info("sig_dump_state");
+    log_info("sig_dump_state");
 }
 
 void sig_int(int sig) {
-	_is_stop = 1;
-	log_info("[] SIG_INT");
+    _is_stop = 1;
+    log_info("[] SIG_INT");
 }
 
 void sig_term(int sig) {
-	_is_stop = 1;
-	log_info("[] SIG_TERM");
+    _is_stop = 1;
+    log_info("[] SIG_TERM");
 }
 
 int env_init() {
-	config_load(cfg_default);
-	signal_init();
+    config_load(cfg_default);
+    signal_init();
 
-	// register signal
-	signal_register(SIGQUIT, dump);
-	signal_register(SIGUSR1, sig_soft_stop);
-	signal_register(SIGHUP, sig_dump_state);
-	signal_register(SIGINT, sig_int);
-	signal_register(SIGTERM, sig_term);
-	signal(SIGPIPE, SIG_IGN);
+    // register signal
+    signal_register(SIGQUIT, dump);
+    signal_register(SIGUSR1, sig_soft_stop);
+    signal_register(SIGHUP, sig_dump_state);
+    signal_register(SIGINT, sig_int);
+    signal_register(SIGTERM, sig_term);
+    signal(SIGPIPE, SIG_IGN);
 
-	tv_update_date(-1, -1);
-	fd_init(global.maxsock);
-	poll_init();
-	return 0;
+    tv_update_date(-1, -1);
+    fd_init(global.maxsock);
+    poll_init();
+    return 0;
 }
 
 int env_deinit() {
-	poll_term();
-	protocol_unbind_all();
-	log_info("server shutdown");
-	return 0;
+    poll_term();
+    protocol_unbind_all();
+    log_info("server shutdown");
+    return 0;
 }
 
 int proc_center() {
-	int next;
-	tv_update_date(0, 1);
-	while (1) {
-		signal_process_queue();
-		wake_expired_tasks(&next); // check exprired tasks
-		process_runnable_tasks(&next); // process task
-		poll_do(next); // event-loop for socket event
-		// check stop condition
-		if (_is_stop) {
-			break;
-		}
-	}
+    int next;
+    tv_update_date(0, 1);
+    while (1) {
+        signal_process_queue();
+        wake_expired_tasks(&next); // check exprired tasks
+        process_runnable_tasks(&next); // process task
+        poll_do(next); // event-loop for socket event
+        // check stop condition
+        if (_is_stop) {
+            break;
+        }
+    }
 }
 
 int main(int argc, char** argv) {
-	env_init();
-	protocol_bind_all();
-	log_info("init complete");
+    env_init();
+    protocol_bind_all();
+    log_info("init complete");
 
-	// fork mode
-	log_pid("main");
-	if (global.nbproc > 1) {
-		log_info("fork mode: nproc(%d)", global.nbproc);
-		int i;
-		int ret;
-		for (i = 0; i < global.nbproc; i++) {
-			ret = fork();
-			if (ret < 0) {
-				log_fatal("fork fail _ _!");
-				protocol_unbind_all();
-			} else if (ret == 0) // child
-				break;
-		}
+    // fork mode
+    log_pid("main");
+    if (global.nbproc > 1) {
+        log_info("fork mode: nproc(%d)", global.nbproc);
+        int i;
+        int ret;
+        for (i = 0; i < global.nbproc; i++) {
+            ret = fork();
+            if (ret < 0) {
+                log_fatal("fork fail _ _!");
+                protocol_unbind_all();
+            } else if (ret == 0) // child
+                break;
+        }
 
-		if (i == global.nbproc) {
-			exit(0); // bye bye boss
-		}
-		poll_fork();
-	}
+        if (i == global.nbproc) {
+            exit(0); // bye bye boss
+        }
+        poll_fork();
+    }
 
-	protocol_enable_all();
-	proc_center();
-	env_deinit();
-	return (EXIT_SUCCESS);
+    protocol_enable_all();
+    proc_center();
+    env_deinit();
+    return (EXIT_SUCCESS);
 }
 

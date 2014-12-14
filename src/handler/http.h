@@ -18,11 +18,11 @@ int http_read(int fd);
 int http_write(int fd);
 
 static struct handler handler_http = {
-	.name = "http",
-	.accept = http_accept,
-	.disconnect = http_disconnect,
-	.read = http_read,
-	.write = http_write
+    .name = "http",
+    .accept = http_accept,
+    .disconnect = http_disconnect,
+    .read = http_read,
+    .write = http_write
 };
 
 #endif	/* HTTP_H */

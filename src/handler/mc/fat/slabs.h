@@ -8,6 +8,10 @@
 #ifndef SLABS_H
 #define	SLABS_H
 
+#define bool char
+#define false 0
+#define true 1
+
 // ref: memcache 1.2.6
 void slabs_init(const size_t limit, const double factor, const bool prealloc);
 

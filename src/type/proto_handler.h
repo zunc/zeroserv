@@ -16,16 +16,16 @@
 struct listener;
 
 struct handler {
-	char *name;
-	int (*init)(struct listener* listener);
-	int (*accept)(int fd);
-	int (*disconnect)(int fd);
-	int (*read)(int fd);
-	int (*write)(int fd);
-	int (*deinit)(int fd);
-	int (*load_config)(void *cfg);
-	void *owner;
-	struct list list;
+    char *name;
+    int (*init)(struct listener* listener);
+    int (*accept)(int fd);
+    int (*disconnect)(int fd);
+    int (*read)(int fd);
+    int (*write)(int fd);
+    int (*deinit)(int fd);
+    int (*load_config)(void *cfg);
+    void *owner;
+    struct list list;
 };
 
 #endif	/* TYPE_HANDLER_H */

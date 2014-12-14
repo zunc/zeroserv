@@ -11,10 +11,10 @@
 #include "type/buffer.h"
 
 struct connection {
-	int fd;
-	void *owner; // listener
-	struct buffer *ib, *ob;
-	
+    int fd;
+    void *owner; // listener
+    struct buffer *ib, *ob;
+
 };
 
 #endif	/* CONNECTION_H */

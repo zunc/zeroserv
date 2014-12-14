@@ -23,12 +23,12 @@ int mc_read(int fd);
 int mc_write(int fd);
 
 static struct handler handler_memcached = {
-	.name = "memcached",
-	.init = mc_init,
-	.accept = mc_accept,
-	.disconnect = mc_disconnect,
-	.read = mc_read,
-	.write = mc_write
+    .name = "memcached",
+    .init = mc_init,
+    .accept = mc_accept,
+    .disconnect = mc_disconnect,
+    .read = mc_read,
+    .write = mc_write
 };
 
 extern struct stats stats;

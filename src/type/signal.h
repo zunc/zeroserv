@@ -9,8 +9,8 @@
 #define	TYPE_SIGNAL_H
 
 struct signal_descriptor {
-	int count; /* number of times raised */
-	void (*handler)(int sig);
+    int count; /* number of times raised */
+    void (*handler)(int sig);
 };
 
 #endif	/* TYPE_SIGNAL_H */
