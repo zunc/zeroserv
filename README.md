@@ -3,7 +3,7 @@
 * Nền tảng server dựa trên kiến trúc HAProxy (http://www.haproxy.org)
 * **lightweight** viết trên ansi C, nhỏ gọn, giản dị và dễ hiểu
 * **event-driven** điều khiển asynchronous socket với event-driven, nhẹ nhàng êm ái và vẫn đảm bảo hiệu suất
-* **performance** sử dụng folk process để đạt lockfree, tối ưu hóa trên CPU nhiều core
+* **performance** lockfree, tối ưu hóa trên CPU nhiều core
 
 * Loại bỏ vấn đề content-switch với thread, bằng tư tưởng: Một luồng chấp hết ("One thread to rule them all") 
 
