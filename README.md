@@ -4,7 +4,6 @@
 * **lightweight** viết trên ansi C, nhỏ gọn, giản dị và dễ hiểu
 * **event-driven** điều khiển asynchronous socket với event-driven, nhẹ nhàng êm ái và vẫn đảm bảo hiệu suất
 * **performance** lockfree, tối ưu hóa trên CPU nhiều core
-
 * Loại bỏ vấn đề content-switch với thread, bằng tư tưởng: Một luồng chấp hết ("One thread to rule them all") 
 
 ## Một nền tảng động
