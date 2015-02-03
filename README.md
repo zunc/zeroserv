@@ -1,5 +1,7 @@
 # zeroserv (Øserv)
 
+[![Join the chat at https://gitter.im/zunc/zeroserv](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zunc/zeroserv?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 * Nền tảng server dựa trên kiến trúc HAProxy (http://www.haproxy.org)
 * **lightweight** viết trên ansi C, nhỏ gọn, giản dị và dễ hiểu
 * **event-driven** điều khiển asynchronous socket với event-driven, nhẹ nhàng êm ái và vẫn đảm bảo hiệu suất
