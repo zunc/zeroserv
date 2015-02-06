@@ -21,27 +21,40 @@
 #define FD_FL_TCP_NOLING        0x0004       /* lingering disabled */
 
 enum {
-    DIR_RD = 0,
-    DIR_WR = 1,
-    DIR_SIZE
+	DIR_RD = 0,
+	DIR_WR = 1,
+	DIR_CLO = 2,
+	DIR_SIZE
+};
+
+// return by callback function
+
+enum {
+	ZB_NOP = 0, // on nop, keep connect
+	ZB_CLOSE_RD = 0x1,
+	ZB_CLOSE_WR = 0x2,
+	ZB_CLOSE = ZB_CLOSE_RD | ZB_CLOSE_WR,
+	ZB_SET_RD = 0x4,
+	ZB_SET_WR = 0x8,
+	ZB_FAIL = 0xff
 };
 
 struct fdtab {
 
-    struct {
-        int (*f)(int fd); /* read/write function */
-        struct buffer *b; /* read/write buffer */
-    } cb[DIR_SIZE];
-    void *owner; /* the session (or proxy) associated with this fd */
+	struct {
+		int (*f)(int fd); /* read/write function */
+		struct buffer *b; /* read/write buffer */
+	} cb[DIR_SIZE];
+	void *owner; /* the session (or proxy) associated with this fd */
 
-    struct { /* used by pollers which support speculative polling */
-        unsigned char e; /* read and write events status. 4 bits, may be merged into flags' lower bits */
-        unsigned int s1; /* Position in spec list+1. 0=not in list. */
-    } spec;
-    unsigned short flags; /* various flags precising the exact status of this fd */
-    unsigned char state; /* the state of this fd */
-    unsigned char ev; /* event seen in return of poll() : FD_POLL_* */
-    void *context;
+	struct { /* used by pollers which support speculative polling */
+		unsigned char e; /* read and write events status. 4 bits, may be merged into flags' lower bits */
+		unsigned int s1; /* Position in spec list+1. 0=not in list. */
+	} spec;
+	unsigned short flags; /* various flags precising the exact status of this fd */
+	unsigned char state; /* the state of this fd */
+	unsigned char ev; /* event seen in return of poll() : FD_POLL_* */
+	void *context;
 };
 
 extern struct fdtab *fdtab; /* array of all the file descriptors */

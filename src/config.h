@@ -16,5 +16,8 @@
 #define JE_ALLOC	0
 #define LOG_COLOURED 1
 
+/* socket options*/
+#define USE_REUSEADDR 0
+#define USE_REUSEPORT 1
 #endif	/* CONFIG_H */
 

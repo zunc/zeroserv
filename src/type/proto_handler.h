@@ -18,7 +18,8 @@ struct listener;
 struct handler {
     char *name;
     int (*init)(struct listener* listener);
-    int (*accept)(int fd);
+	int (*request_accept)();
+    int (*accept)(int nfd);
     int (*disconnect)(int fd);
     int (*read)(int fd);
     int (*write)(int fd);
