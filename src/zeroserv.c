@@ -55,7 +55,7 @@ int env_init() {
     signal(SIGPIPE, SIG_IGN);
 
     tv_update_date(-1, -1);
-    fd_init(global.maxsock);
+    fd_init(global.maxconn);
     poll_init();
     return 0;
 }

@@ -204,15 +204,15 @@ void __fd_clo(int fd) {
 }
 
 int poll_init() {
-	epoll_fd = epoll_create(global.maxsock + 1);
+	epoll_fd = epoll_create(global.maxconn + 1);
 	if (epoll_fd == -1) {
 		log_fatal("epoll_create");
 	}
-	epoll_events = calloc(1, global.maxsock * sizeof (struct epoll_event));
-	int fd_set_bytes = 4 * (global.maxsock + 15) / 16;
+	epoll_events = calloc(1, global.maxconn * sizeof (struct epoll_event));
+	int fd_set_bytes = 4 * (global.maxconn + 15) / 16;
 	fd_evts = (uint32_t *) calloc(1, fd_set_bytes);
-	chg_list = (struct fd_chg *) calloc(1, sizeof (struct fd_chg) * global.maxsock);
-	chg_ptr = (struct fd_chg **) calloc(1, sizeof (struct fd_chg*) * global.maxsock);
+	chg_list = (struct fd_chg *) calloc(1, sizeof (struct fd_chg) * global.maxconn);
+	chg_ptr = (struct fd_chg **) calloc(1, sizeof (struct fd_chg*) * global.maxconn);
 	return 0;
 }
 
@@ -288,7 +288,7 @@ int poll_do(int exp) {
 int poll_fork() {
 	if (epoll_fd >= 0)
 		close(epoll_fd);
-	epoll_fd = epoll_create(global.maxsock + 1);
+	epoll_fd = epoll_create(global.maxconn + 1);
 	if (epoll_fd < 0)
 		return 0;
 	return 1;

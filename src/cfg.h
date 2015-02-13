@@ -8,7 +8,6 @@
 #ifndef CFG_H
 #define	CFG_H
 
-struct global global;
 int config_load();
 void config_free();
 

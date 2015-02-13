@@ -14,7 +14,7 @@ struct global {
     int nbproc;
     int maxconn;
     int maxpipes; /* max # of pipes */
-    int maxsock; /* max # of sockets */
+    //int maxsock; /* max # of sockets */
     int rlimit_nofile; /* default ulimit-n value : 0=unset */
     int rlimit_memmax; /* default ulimit-d in megs value : 0=unset */
     int mode;

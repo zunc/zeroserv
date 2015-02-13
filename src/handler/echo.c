@@ -62,7 +62,7 @@ int echo_accept(int nfd) {
 }
 
 int echo_disconnect(int fd) {
-	log_info("[%*d] disconnect\n", 4, fd);
+	log_info("[%*d] disconnect", 4, fd);
 	struct buffer *b = fdtab[fd].cb[DIR_WR].b;
 	buffer_free(b);
 	fdtab[fd].cb[DIR_WR].b = NULL;
@@ -116,7 +116,7 @@ int echo_load_config(void *config) {
 	if (!config_setting_lookup_int64(echo_cfg, "max_conn", (long long *) &_stat.max_conn)) {
 		log_fatal("handler(%s) incorrect config", handler_echo.name);
 	} else {
-		printf(" - echo{max_conn(%ld)}", _stat.max_conn);
+		log_info("%s{max_conn(%ld)}", handler_echo.name, _stat.max_conn);
 	}
 	return 0;
 }

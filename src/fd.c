@@ -49,7 +49,7 @@ int fd_init(int maxsock) {
         return -1;
     }
 
-    for (i = 0; i < global.maxsock; i++) {
+    for (i = 0; i < global.maxconn; i++) {
         fdtab[i].state = FD_STCLOSE;
     }
     return maxsock;
