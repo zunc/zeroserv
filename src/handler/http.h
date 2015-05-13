@@ -8,9 +8,9 @@
 #ifndef HTTP_H
 #define	HTTP_H
 
-#include "../type/protocols.h"
-#include "../type/proto_handler.h"
-#include "../proto_tcp.h"
+#include "type/protocols.h"
+#include "type/proto_handler.h"
+#include "proto_tcp.h"
 
 int http_accept(int fd);
 int http_disconnect(int fd);

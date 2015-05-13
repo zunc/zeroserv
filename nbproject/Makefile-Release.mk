@@ -50,6 +50,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/handler/mc/fat/sto_layer.o \
 	${OBJECTDIR}/src/handler/mc/items.o \
 	${OBJECTDIR}/src/handler/memcached.o \
+	${OBJECTDIR}/src/handler/pubsub.o \
+	${OBJECTDIR}/src/handler/pubsub/account.o \
+	${OBJECTDIR}/src/handler/pubsub/idzen.o \
+	${OBJECTDIR}/src/handler/pubsub/model.o \
+	${OBJECTDIR}/src/handler/pubsub/topic.o \
 	${OBJECTDIR}/src/handler_udp/echo_udp.o \
 	${OBJECTDIR}/src/handler_udp/routing.o \
 	${OBJECTDIR}/src/handler_udp/routing/local_port.o \
@@ -165,6 +170,31 @@ ${OBJECTDIR}/src/handler/memcached.o: src/handler/memcached.c
 	${MKDIR} -p ${OBJECTDIR}/src/handler
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/memcached.o src/handler/memcached.c
+
+${OBJECTDIR}/src/handler/pubsub.o: src/handler/pubsub.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/pubsub.o src/handler/pubsub.c
+
+${OBJECTDIR}/src/handler/pubsub/account.o: src/handler/pubsub/account.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler/pubsub
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/pubsub/account.o src/handler/pubsub/account.c
+
+${OBJECTDIR}/src/handler/pubsub/idzen.o: src/handler/pubsub/idzen.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler/pubsub
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/pubsub/idzen.o src/handler/pubsub/idzen.c
+
+${OBJECTDIR}/src/handler/pubsub/model.o: src/handler/pubsub/model.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler/pubsub
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/pubsub/model.o src/handler/pubsub/model.c
+
+${OBJECTDIR}/src/handler/pubsub/topic.o: src/handler/pubsub/topic.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler/pubsub
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/pubsub/topic.o src/handler/pubsub/topic.c
 
 ${OBJECTDIR}/src/handler_udp/echo_udp.o: src/handler_udp/echo_udp.c 
 	${MKDIR} -p ${OBJECTDIR}/src/handler_udp

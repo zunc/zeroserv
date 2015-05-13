@@ -10,7 +10,8 @@
  */
 
 #include <string.h>
-#include "signal.h"
+#include <signal.h>
+#include "zsignal.h"
 #include "dbg.h"
 
 #ifndef MAX_SIGNAL

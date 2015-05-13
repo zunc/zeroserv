@@ -9,16 +9,16 @@
 #include <libconfig.h>
 
 #include "echo.h"
-#include "../buffer.h"
-#include "../protos.h"
-#include "../dbg.h"
-#include "../fd.h"
-#include "../common/mini-clist.h"
-#include "../common.h"
-#include "../handler.h"
-#include "../common/ticks.h"
-#include "../common/time.h"
-#include "../task.h"
+#include "buffer.h"
+#include "protos.h"
+#include "dbg.h"
+#include "fd.h"
+#include "common/mini-clist.h"
+#include "common.h"
+#include "handler.h"
+#include "common/ticks.h"
+#include "common/time.h"
+#include "task.h"
 
 #define HTTP_BUFFER_SIZE 4096
 #define RUN_ONCE	0

@@ -1,6 +1,6 @@
 #include "mineip.h"
-#include "../../common/mini-clist.h"
-#include "../../dbg.h"
+#include "common/mini-clist.h"
+#include "dbg.h"
 #include <netdb.h>
 #include <ifaddrs.h>
 #include <stdlib.h>

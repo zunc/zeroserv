@@ -1,11 +1,11 @@
 #include "memcached.h"
-#include "../buffer.h"
-#include "../protos.h"
-#include "../dbg.h"
-#include "../common/mini-clist.h"
-#include "../fd.h"
-#include "../common.h"
-#include "../handler.h"
+#include "buffer.h"
+#include "protos.h"
+#include "dbg.h"
+#include "common/mini-clist.h"
+#include "fd.h"
+#include "common.h"
+#include "handler.h"
 #include <stdlib.h>
 #include <assert.h>
 

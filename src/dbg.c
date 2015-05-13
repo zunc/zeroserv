@@ -12,7 +12,7 @@ char* get_formatted_time(void) {
     struct tm* timeinfo = 0;
 
     time(&rawtime);
-    timeinfo = localtime(&rawtime);
+    timeinfo = (struct tm*) localtime(&rawtime);
 
     static char _retval[20];
     strftime(_retval, sizeof (_retval), "%Y-%m-%d %H:%M:%S", timeinfo);

@@ -8,9 +8,9 @@
 #ifndef ECHO_UDP_H
 #define	ECHO_UDP_H
 
-#include "../type/protocols.h"
-#include "../type/proto_handler.h"
-#include "../proto_udp.h"
+#include "type/protocols.h"
+#include "type/proto_handler.h"
+#include "proto_udp.h"
 
 int echo_udp_init(struct listener *listener);
 int echo_udp_deinit(int fd);

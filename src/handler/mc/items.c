@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
+#include <ztime.h>
 #include <assert.h>
 #include <stdbool.h>
 

@@ -25,8 +25,8 @@
 #include <sys/time.h>
 
 //#include <common/config.h>
-#include "../common/mini-clist.h"
-#include "../ebtree/eb32tree.h"
+#include "common/mini-clist.h"
+#include "ebtree/eb32tree.h"
 
 /* values for task->state */
 #define TASK_SLEEPING     0x00  /* task sleeping */

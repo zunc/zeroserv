@@ -8,6 +8,7 @@
 #ifndef TYPE_PROTOCOLS_H
 #define	TYPE_PROTOCOLS_H
 
+#include <ztime.h>
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -15,7 +16,7 @@
 #include <sys/un.h>
 #include <netinet/in.h>
 
-#include "../common/mini-clist.h"
+#include "common/mini-clist.h"
 #include "proto_handler.h"
 
 #define PROTO_NAME_LEN 16

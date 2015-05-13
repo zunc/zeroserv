@@ -8,8 +8,8 @@
 #ifndef TYPE_HANDLER_H
 #define	TYPE_HANDLER_H
 
-#include "../common/mini-clist.h"
-//#include "../type/protocols.h"
+#include "common/mini-clist.h"
+//#include "type/protocols.h"
 
 #define PROTO_NAME_LEN 16
 

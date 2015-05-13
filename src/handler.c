@@ -15,7 +15,6 @@ void handler_unregister(struct handler *hd) {
 
 struct handler* handler_get(const char* name) {
     struct handler *hd;
-
     list_for_each_entry(hd, &handlers, list) {
         if (!strcmp(hd->name, name))
             return hd;

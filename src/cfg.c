@@ -1,3 +1,5 @@
+#include <stdint.h>
+#include <ztime.h>
 #include "cfg.h"
 #include "config.h"
 #include "dbg.h"
@@ -14,6 +16,7 @@
 #include "handler/memcached.h"
 #include "handler_udp/echo_udp.h"
 #include "handler_udp/routing.h"
+#include "handler/pubsub.h"
 
 #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 #define MAX_INSTANCE 64
@@ -80,7 +83,7 @@ int config_load(const char* file) {
 
     // udp
     cfg_udp = config_lookup(&cfg, "udp");
-    if (cfg_tcp) {
+    if (cfg_udp) {
         int count = config_setting_length(cfg_udp);
         int i;
         for (i = 0; i < count; ++i) {

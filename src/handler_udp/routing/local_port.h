@@ -8,7 +8,7 @@
 #ifndef LOCAL_PORT_H
 #define	LOCAL_PORT_H
 
-#include "../../common/uthash.h"
+#include "common/uthash.h"
 
 struct local_port {
     unsigned int id;

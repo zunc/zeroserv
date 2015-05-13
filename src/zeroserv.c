@@ -12,7 +12,7 @@
 #include "poller.h"
 #include "global.h"
 #include "dbg.h"
-#include "signal.h"
+#include "zsignal.h"
 #include "cfg.h"
 
 #include "task.h"
@@ -82,7 +82,19 @@ int proc_center() {
     }
 }
 
+#include "handler/pubsub/idzen.h"
 int main(int argc, char** argv) {
+//    //--- test id_zen
+//    int i;
+//    int ngroup = 5;
+//    for (i = 0; i < 100; i++) {
+//        char group[24] = {};
+//        sprintf(group, "group_%d", i % ngroup);
+//        long id = id_zen(group);
+//        printf("%s: %ld\n", group, id);
+//    }
+//    return 0;
+
     env_init();
     protocol_bind_all();
     log_info("init complete");

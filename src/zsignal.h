@@ -8,7 +8,6 @@
 #ifndef SIGNAL_H
 #define	SIGNAL_H
 
-#include <signal.h>
 #include "type/signal.h"
 
 extern int signal_queue_len;

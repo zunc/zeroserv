@@ -2,7 +2,7 @@
  * implement a internal [virtual] port for routing
  */
 #include "local_port.h"
-#include "../../common/time.h"
+#include "common/time.h"
 
 #define MAX_PORT (2^16 - 1)
 unsigned short _port = 0;

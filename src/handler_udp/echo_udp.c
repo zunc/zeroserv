@@ -8,13 +8,13 @@
 #include <netinet/in.h>
 
 #include "echo_udp.h"
-#include "../buffer.h"
-#include "../protos.h"
-#include "../dbg.h"
-#include "../common/mini-clist.h"
-#include "../fd.h"
-#include "../common.h"
-#include "../handler.h"
+#include "buffer.h"
+#include "protos.h"
+#include "dbg.h"
+#include "common/mini-clist.h"
+#include "fd.h"
+#include "common.h"
+#include "handler.h"
 
 #define RUN_ONCE	0
 #define UECHO_BUFFER_SIZE 4096

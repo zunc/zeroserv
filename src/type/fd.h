@@ -8,6 +8,7 @@
 #ifndef TYPE_FD_H
 #define	TYPE_FD_H
 
+#include <string.h>
 #include "buffer.h"
 
 #define FD_STCLOSE	0

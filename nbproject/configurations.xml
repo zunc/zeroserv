@@ -38,12 +38,25 @@
           <itemPath>src/handler/mc/stats.h</itemPath>
           <itemPath>src/handler/mc/util.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="f2" displayName="pubsub" projectFiles="true">
+          <logicalFolder name="f1" displayName="db" projectFiles="true">
+          </logicalFolder>
+          <itemPath>src/handler/pubsub/account.c</itemPath>
+          <itemPath>src/handler/pubsub/handler.h</itemPath>
+          <itemPath>src/handler/pubsub/idzen.c</itemPath>
+          <itemPath>src/handler/pubsub/idzen.h</itemPath>
+          <itemPath>src/handler/pubsub/model.c</itemPath>
+          <itemPath>src/handler/pubsub/model.h</itemPath>
+          <itemPath>src/handler/pubsub/topic.c</itemPath>
+        </logicalFolder>
         <itemPath>src/handler/echo.c</itemPath>
         <itemPath>src/handler/echo.h</itemPath>
         <itemPath>src/handler/http.c</itemPath>
         <itemPath>src/handler/http.h</itemPath>
         <itemPath>src/handler/memcached.c</itemPath>
         <itemPath>src/handler/memcached.h</itemPath>
+        <itemPath>src/handler/pubsub.c</itemPath>
+        <itemPath>src/handler/pubsub.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="handler_udp" projectFiles="true">
         <logicalFolder name="f1" displayName="routing" projectFiles="true">
@@ -90,10 +103,10 @@
       <itemPath>src/proto_tcp.h</itemPath>
       <itemPath>src/proto_udp.h</itemPath>
       <itemPath>src/protos.h</itemPath>
-      <itemPath>src/signal.h</itemPath>
       <itemPath>src/task.h</itemPath>
-      <itemPath>src/time.h</itemPath>
       <itemPath>src/util.h</itemPath>
+      <itemPath>src/zsignal.h</itemPath>
+      <itemPath>src/ztime.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles" displayName="src" projectFiles="true">
       <itemPath>src/cfg.c</itemPath>
@@ -132,6 +145,11 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <incDir>
+            <pElem>src</pElem>
+          </incDir>
+        </cTool>
         <linkerTool>
           <output>bin/zeroservd</output>
           <linkerLibItems>
@@ -233,6 +251,24 @@
       </item>
       <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/handler/pubsub.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/account.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/handler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/idzen.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/idzen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/model.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/model.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/topic.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
@@ -305,15 +341,11 @@
       </item>
       <item path="src/signal.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/signal.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/task.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/time.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/time.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/type/buffer.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -334,6 +366,10 @@
       <item path="src/util.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/zeroserv.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/zsignal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ztime.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -456,6 +492,24 @@
       </item>
       <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/handler/pubsub.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/account.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/handler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/idzen.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/idzen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/model.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/model.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/topic.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
@@ -528,15 +582,11 @@
       </item>
       <item path="src/signal.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/signal.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/task.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/time.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/time.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/type/buffer.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -557,6 +607,10 @@
       <item path="src/util.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/zeroserv.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/zsignal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ztime.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Debug_zalloc" type="1">
@@ -668,6 +722,24 @@
       </item>
       <item path="src/handler/memcached.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/handler/pubsub.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/account.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/handler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/idzen.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/idzen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/model.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/model.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/pubsub/topic.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/handler_udp/echo_udp.c" ex="false" tool="0" flavor2="9">
       </item>
       <item path="src/handler_udp/echo_udp.h" ex="false" tool="3" flavor2="0">
@@ -740,15 +812,11 @@
       </item>
       <item path="src/signal.c" ex="false" tool="0" flavor2="9">
       </item>
-      <item path="src/signal.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/task.c" ex="false" tool="0" flavor2="9">
       </item>
       <item path="src/task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/time.c" ex="false" tool="0" flavor2="9">
-      </item>
-      <item path="src/time.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/type/buffer.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -769,6 +837,10 @@
       <item path="src/util.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/zeroserv.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="src/zsignal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ztime.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

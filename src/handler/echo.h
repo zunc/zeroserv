@@ -8,9 +8,10 @@
 #ifndef ECHO_H
 #define	ECHO_H
 
-#include "../type/protocols.h"
-#include "../type/proto_handler.h"
-#include "../proto_tcp.h"
+//#include "type/protocols.h"
+#include "type/protocols.h"
+#include "type/proto_handler.h"
+#include "proto_tcp.h"
 
 int echo_request_accept();
 int echo_accept(int fd);

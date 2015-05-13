@@ -12,9 +12,9 @@
 #ifndef MEMCACHED_H
 #define	MEMCACHED_H
 
-#include "../type/protocols.h"
-#include "../type/proto_handler.h"
-#include "../proto_tcp.h"
+#include "type/protocols.h"
+#include "type/proto_handler.h"
+#include "proto_tcp.h"
 
 int mc_init(struct listener *listener);
 int mc_accept(int fd);

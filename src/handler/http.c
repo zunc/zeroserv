@@ -8,13 +8,13 @@
 #include <netinet/in.h>
 
 #include "http.h"
-#include "../buffer.h"
-#include "../protos.h"
-#include "../dbg.h"
-#include "../common/mini-clist.h"
-#include "../fd.h"
-#include "../common.h"
-#include "../common/compiler.h"
+#include "buffer.h"
+#include "protos.h"
+#include "dbg.h"
+#include "common/mini-clist.h"
+#include "fd.h"
+#include "common.h"
+#include "common/compiler.h"
 
 //--- string proc
 #include <string.h>

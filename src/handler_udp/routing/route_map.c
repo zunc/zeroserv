@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "route_map.h"
-#include "../../dbg.h"
+#include "dbg.h"
 #include <string.h>
 #include <sys/types.h>
 

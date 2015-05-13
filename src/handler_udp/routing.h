@@ -8,9 +8,9 @@
 #ifndef TROUTING_H
 #define	TROUTING_H
 
-#include "../type/protocols.h"
-#include "../type/proto_handler.h"
-#include "../proto_udp.h"
+#include "type/protocols.h"
+#include "type/proto_handler.h"
+#include "proto_udp.h"
 
 int routing_init(struct listener *listener);
 int routing_deinit(int fd);

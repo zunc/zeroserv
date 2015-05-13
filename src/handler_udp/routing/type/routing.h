@@ -8,9 +8,9 @@
 #ifndef ROUTING_H
 #define	ROUTING_H
 
-#include "../../..//task.h"
-#include "../../../common/time.h"
-#include "../../../common/uthash.h"
+#include "task.h"
+#include "common/time.h"
+#include "common/uthash.h"
 
 #define HEADER_SIZE 24
 

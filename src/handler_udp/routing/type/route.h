@@ -11,7 +11,7 @@
 #include <regex.h>
 #include <stdint.h>
 #include <netinet/ip.h>
-#include "../../../common/mini-clist.h"
+#include "common/mini-clist.h"
 
 #define ROUT_BUF 128
 #define ROUT_BUF_REV (ROUT_BUF - 1)
