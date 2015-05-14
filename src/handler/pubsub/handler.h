@@ -41,15 +41,16 @@ struct account {
     int fd; // fd = 0: is offline
 };
 
-int topic_register(const char *name);
-int topic_unregister(const char *name);
-int topic_join(const char *name, int fd);
-int topic_left(const char *name, int fd);
-struct topic* topic_get(const char* name);
+struct topic* topic_create(const char *name);
+int topic_delete(const char *name);
+int topic_join(struct topic *top, struct account *acc);
+int topic_left(struct topic *top, struct account *acc);
+struct topic* topic_get(const char *name);
 
 int account_create(const char *name, const char *auth);
 int account_auth(const char *name, const char *auth);
-struct  account*  account_get(const char* name);
+struct account* account_get(const char* name);
+struct account* account_get_by_fd(const int fd);
 
 #endif	/* CHANNEL_H */
 

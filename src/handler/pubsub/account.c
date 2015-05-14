@@ -37,8 +37,20 @@ struct account* account_get(const char* name) {
     return 0;
 }
 
+struct account* account_get_by_fd(const int fd) {
+    struct account *acc;
+#if !USE_DB
+
+    list_for_each_entry(acc, &accounts, list) {
+        if (acc->id == fd)
+            return acc;
+    }
+#endif
+    return 0;
+}
+
 int account_auth(const char *name, const char *auth) {
     struct account *acc = account_get(name);
     if (!acc) return -1;
-    return strncmp(acc->auth, auth, strlen(auth));
+    return strncmp(acc->auth, auth, strlen(acc->auth));
 }

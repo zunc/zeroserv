@@ -76,8 +76,13 @@ int process_plain_text(int fd, struct buffer* ib) {
     format_msg(ib->curr, len);
     if (!strncmp(ib->curr, "sub ", 4)) {
         printf("[SUB] %s\n", ib->curr + 4);
+        const char* topic = ib->curr + 4;
+        ret = model_sub(fd, topic);
     } else if (!strncmp(ib->curr, "pub ", 4)) {
         printf("[PUB] %s\n", ib->curr + 4);
+    } else if (!strncmp(ib->curr, "subcre ", 7)) {
+        printf("[SUB_CREATE] %s\n", ib->curr + 7);
+        ret = model_subcreate(fd, ib->curr + 7);
     } else if (!strncmp(ib->curr, "log ", 4)) {
         printf("[LOGIN] %s\n", ib->curr + 4);
         const char* user = ib->curr + 4;
@@ -85,7 +90,7 @@ int process_plain_text(int fd, struct buffer* ib) {
         if (auth) {
             *auth = 0;
             auth++;
-           ret = model_acc_auth(fd, user, auth);
+            ret = model_acc_auth(fd, user, auth);
         } else {
             ret = ZB_CLOSE;
         }
