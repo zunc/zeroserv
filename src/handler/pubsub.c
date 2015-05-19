@@ -70,23 +70,67 @@ void format_msg(char *msg, int size) {
     }
 }
 
+#define COMPARE(data, str) strncmp(ib->curr, str, strlen(str))
+
 int process_plain_text(int fd, struct buffer* ib) {
+    // implement follow api: https://cloud.google.com/pubsub/reference/rest/
+
     int ret = ZB_NOP;
     // protocol parse: text protocol
     int len = buffer_remain_read(ib);
     format_msg(ib->curr, len);
-    if (!strncmp(ib->curr, "sub ", 4)) {
-        printf("[SUB] %s\n", ib->curr + 4);
-        const char* topic = ib->curr + 4;
-        ret = model_sub(fd, topic);
-    } else if (!strncmp(ib->curr, "pub ", 4)) {
-        printf("[PUB] %s\n", ib->curr + 4);
-    } else if (!strncmp(ib->curr, "subcre ", 7)) {
-        printf("[SUB_CREATE] %s\n", ib->curr + 7);
-        ret = model_subcreate(fd, ib->curr + 7);
-    } else if (!strncmp(ib->curr, "log ", 4)) {
-        printf("[LOGIN] %s\n", ib->curr + 4);
-        const char* user = ib->curr + 4;
+
+    const char *cmd = ib->curr;
+    const char *param = NULL;
+    //--- message
+    if (!COMPARE(cmd, "ack ")) {
+        printf("[ack] %s\n", cmd);
+        //
+    }
+
+    //--- drive topic
+    if (!COMPARE(cmd, "create ")) {
+        param = cmd + 7;
+        printf("[create] %s\n", param);
+        ret = model_topic_create(fd, param);
+    }
+    if (!COMPARE(cmd, "delete ")) {
+        param = cmd + 7;
+        printf("[delete] %s\n", param);
+        ret = model_topic_delete(fd, param);
+    }
+
+    //--- pubsub
+    if (!COMPARE(cmd, "sub ")) {
+        param = cmd + 4;
+        printf("[sub] %s\n", param);
+        ret = model_sub(fd, param);
+    }
+    if (!COMPARE(cmd, "unsub ")) {
+        param = cmd + 6;
+        printf("[unsub] %s\n", param);
+        ret = model_unsub(fd, param);
+    }
+
+    if (!COMPARE(ib->curr, "pub ")) {
+        param = cmd + 4;
+        printf("[pub] %s\n", param);
+        char *pos = strchr(param, ' ');
+        if (pos > 0) {
+            // <impl>
+            *pos = 0;
+            pos++;
+            ret = model_pub(fd, param, pos);
+        } else {
+            log_warn("incorrect parameter: %s", param);
+        }
+    }
+
+    //--- user
+    if (!COMPARE(ib->curr, "login ")) {
+        param = cmd + 6;
+        printf("[login] %s\n", param);
+        const char* user = param;
         char *auth = strchr(user, ' ');
         if (auth) {
             *auth = 0;
@@ -95,10 +139,11 @@ int process_plain_text(int fd, struct buffer* ib) {
         } else {
             ret = ZB_CLOSE;
         }
-
-    } else if (!strncmp(ib->curr, "cre ", 4)) {
-        printf("[CREATE] %s\n", ib->curr + 4);
-        const char* user = ib->curr + 4;
+    }
+    if (!COMPARE(ib->curr, "logup ")) {
+        param = cmd + 6;
+        printf("[logup] %s\n", param);
+        const char* user = param;
         char *auth = strchr(user, ' ');
         if (auth) {
             *auth = 0;

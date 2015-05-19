@@ -19,6 +19,13 @@
 #define EV_FD_REM(fd)        (__fd_rem(fd))
 #define EV_FD_CLO(fd)        (__fd_clo(fd))
 
+#define RD_ENABLE(fd)	EV_FD_SET(fd, DIR_RD)
+#define WR_ENABLE(fd)	EV_FD_SET(fd, DIR_WR)
+#define RD_DISABLE(fd)	EV_FD_CLR(fd, DIR_RD)
+#define WR_DISABLE(fd)	EV_FD_CLR(fd, DIR_WR)
+#define IS_RD(fd)		EV_FD_ISSET(fd, DIR_RD)
+#define IS_WR(fd)		EV_FD_ISSET(fd, DIR_WR)
+
 void fd_delete(int fd);
 void fd_insert(int fd);
 int fd_init(int maxsock);

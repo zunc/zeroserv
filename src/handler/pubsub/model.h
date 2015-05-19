@@ -12,7 +12,7 @@ int model_acc_create(const int fd, const char* acc, const char* auth);
 int model_acc_auth(const int fd, const char* acc, const char* auth);
 int model_acc_offline(const int fd);
 
-int model_subcreate(const int fd, const char* topic);
+int model_topic_create(const int fd, const char* topic);
 int model_sub(const int fd, const char* topic);
 int model_unsub(const int fd, const char* topic);
 int model_pub(const int fd, const char* topic, const char *msg);
