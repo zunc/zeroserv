@@ -11,6 +11,7 @@
 #include "type/buffer.h"
 #include "common.h"
 #include <stdlib.h>
+#include <stdarg.h> 
 
 inline static int buffer_empty(struct buffer *b) {
     return (b->r == b->curr);
@@ -47,6 +48,17 @@ inline static int buffer_write_bytes(struct buffer *b) {
 
 inline static int buffer_read_bytes(struct buffer *b) {
     return (b->curr - b->buff);
+}
+
+inline static int buffer_sprintf(struct buffer *b, const char *format, ...) {
+    int ret = 0;
+    int remain = buffer_remain_write(b);
+    va_list args;
+    va_start(args, format);
+    ret = vsnprintf(b->r, remain, format, args);
+    va_end(args);
+    if (ret > 0) b->r += ret;
+    return ret;
 }
 
 #endif	/* BUFFER_H */

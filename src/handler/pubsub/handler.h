@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include "common/mini-clist.h"
+#include "common/vector.h"
 
 struct topic {
     long id;
@@ -18,7 +19,7 @@ struct topic {
     long created_time;
     long last_active;
     struct list list;
-    struct list members;
+    vector members;
 };
 
 struct massage {
@@ -35,8 +36,8 @@ struct account {
     char *auth;
     long created_time;
     long last_active;
-    struct list sub_lists;
-    struct list pub_lists;
+    vector sub_lists;
+    //struct list pub_lists;
     struct list list;
     int fd; // fd = 0: is offline
 };

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "handler.h"
+#include "common.h"
 
 static struct list topics = LIST_HEAD_INIT(topics);
 
@@ -24,11 +25,14 @@ int topic_delete(const char *name) {
 }
 
 int topic_join(struct topic *top, struct account *acc) {
-    //LIST_ADDQ(&top->members, &new_top->list);
+    vector_insert(&top->members, acc);
+    vector_insert(&acc->sub_lists, top);
     return 0;
 }
 
 int topic_left(struct topic *top, struct account *acc) {
+    vector_remove(&top->members, acc);
+    vector_insert(&acc->sub_lists, top);
     return 0;
 }
 

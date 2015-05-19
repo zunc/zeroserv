@@ -9,7 +9,7 @@
 static struct list accounts = LIST_HEAD_INIT(accounts);
 #else
 
-#endif 
+#endif
 
 int account_create(const char *name, const char *auth) {
     struct account *acc = account_get(name);

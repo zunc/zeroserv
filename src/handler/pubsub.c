@@ -55,6 +55,7 @@ int psub_disconnect(int fd) {
     buffer_free(b);
     fdtab[fd].cb[DIR_RD].b = NULL;
     _stat.conn--;
+    model_acc_offline(fd);
     return ZB_NOP;
 }
 
@@ -142,6 +143,8 @@ int psub_write(int fd) {
         if (buffer_empty(ob)) {
             buffer_reset(ob);
             return ZB_CLOSE_WR;
+        } else {
+            return ZB_SET_WR;
         }
     } else {
         log_info("send: (%d)", n);

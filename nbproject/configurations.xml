@@ -10,6 +10,7 @@
         <itemPath>src/common/ticks.h</itemPath>
         <itemPath>src/common/time.h</itemPath>
         <itemPath>src/common/uthash.h</itemPath>
+        <itemPath>src/common/vector.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="ebtree" projectFiles="true">
         <itemPath>src/ebtree/compiler.h</itemPath>
@@ -182,6 +183,8 @@
       <item path="src/common/time.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/common/uthash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/vector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/compiler.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -424,6 +427,8 @@
       </item>
       <item path="src/common/uthash.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/common/vector.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/compiler.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/config.h" ex="false" tool="3" flavor2="0">
@@ -653,6 +658,8 @@
       <item path="src/common/time.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/common/uthash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/common/vector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/compiler.h" ex="false" tool="3" flavor2="0">
       </item>

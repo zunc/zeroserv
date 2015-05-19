@@ -83,17 +83,61 @@ int proc_center() {
 }
 
 #include "handler/pubsub/idzen.h"
+#include "common/vector.h"
+
 int main(int argc, char** argv) {
-//    //--- test id_zen
+//    //--- vector int
+//    struct vector v = vector_create(10, 2);
+//    int N = 20;
+//    int *arr = malloc(N * sizeof (int));
 //    int i;
-//    int ngroup = 5;
-//    for (i = 0; i < 100; i++) {
-//        char group[24] = {};
-//        sprintf(group, "group_%d", i % ngroup);
-//        long id = id_zen(group);
-//        printf("%s: %ld\n", group, id);
+//    for (i = 0; i < N; i++) {
+//        vector_insert(&v, i);
 //    }
+//
+//    vector_remove(&v, 9);
+//    
+//    //---
+//    for (i = 0; i < vector_size(&v); i++) {
+//        int var = (vector_access(&v, i));
+//        printf("%d. %d\n", i, var);
+//    }
+//    log_info("DONE");
 //    return 0;
+    
+    
+//    //--- vector test with pointer
+//    struct vector v = vector_create(10, 2);
+//    int N = 20;
+//    int *arr = malloc(N * sizeof (int));
+//    int i;
+//    for (i = 0; i < N; i++) {
+//        *(arr + i) = i;
+//        vector_insert(&v, arr + i);
+//    }
+//
+//    vector_remove(&v, arr + 9);
+//    //vector_remove(&v, arr + 10);
+//    
+//    //---
+//    void *data = v.data;
+//    for (i = 0; i < vector_size(&v); i++) {
+//        int *var = (int*) (vector_access(&v, i));
+//        printf("%d. 0x%x : %d\n", i, var, *var);
+//    }
+//    log_info("DONE");
+//    return 0;
+
+    //    //--- test id_zen
+    //    int i;
+    //    int ngroup = 5;
+    //    for (i = 0; i < 100; i++) {
+    //        char group[24] = {};
+    //        sprintf(group, "group_%d", i % ngroup);
+    //        long id = id_zen(group);
+    //        printf("%s: %ld\n", group, id);
+    //    }
+    //    return 0;
 
     env_init();
     protocol_bind_all();
