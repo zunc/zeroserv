@@ -116,7 +116,7 @@ int echo_load_config(void *config) {
 	if (!config_setting_lookup_int64(echo_cfg, "max_conn", (long long *) &_stat.max_conn)) {
 		log_fatal("handler(%s) incorrect config", handler_echo.name);
 	} else {
-		log_info("%s{max_conn(%ld)}", handler_echo.name, _stat.max_conn);
+		//log_info("%s{max_conn(%ld)}", handler_echo.name, _stat.max_conn);
 	}
 	return 0;
 }

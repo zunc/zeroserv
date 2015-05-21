@@ -25,6 +25,7 @@
 #define WR_DISABLE(fd)	EV_FD_CLR(fd, DIR_WR)
 #define IS_RD(fd)		EV_FD_ISSET(fd, DIR_RD)
 #define IS_WR(fd)		EV_FD_ISSET(fd, DIR_WR)
+#define CLOSE_FD(fd)	EV_FD_CLO(fd, DIR_WR)
 
 void fd_delete(int fd);
 void fd_insert(int fd);

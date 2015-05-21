@@ -61,5 +61,14 @@ inline static int buffer_sprintf(struct buffer *b, const char *format, ...) {
     return ret;
 }
 
+inline static int buffer_write(struct buffer *b, const char *content, int length) {
+    int ret = 0;
+    int remain = buffer_remain_write(b);
+    if (remain <= length) return (remain - length);
+    memcpy(b->r, content, length);
+    b->r += length;
+    return length;
+}
+
 #endif	/* BUFFER_H */
 

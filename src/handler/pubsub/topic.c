@@ -7,7 +7,7 @@ static struct list topics = LIST_HEAD_INIT(topics);
 
 struct topic* topic_create(const char *name) {
     struct topic *top = topic_get(name);
-    if (top) return NULL;
+    if (top) return top;
     struct topic *new_top = malloc(sizeof (struct topic));
     new_top->name = strdup(name);
     new_top->count = 0;

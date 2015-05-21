@@ -39,7 +39,6 @@ typedef struct vector {
 #define ELEM(i) ((char *) (v->data) + (i) * (v->type_size))
 
 static vector vector_create(int initial_capacity, float growth_factor) {
-    //static const int initial_capacity = 10;
     assert(growth_factor > 1.0f);
     vector new = {
         .data = malloc(initial_capacity * sizeof (void*)),

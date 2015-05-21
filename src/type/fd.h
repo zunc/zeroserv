@@ -45,6 +45,7 @@ struct fdtab {
 	struct {
 		int (*f)(int fd); /* read/write function */
 		struct buffer *b; /* read/write buffer */
+        void *parser;
 	} cb[DIR_SIZE];
 	void *owner; /* the session (or proxy) associated with this fd */
 

@@ -84,49 +84,67 @@ int proc_center() {
 
 #include "handler/pubsub/idzen.h"
 #include "common/vector.h"
+#include "handler/http/cookie.h"
 
 int main(int argc, char** argv) {
-//    //--- vector int
-//    struct vector v = vector_create(10, 2);
-//    int N = 20;
-//    int *arr = malloc(N * sizeof (int));
-//    int i;
-//    for (i = 0; i < N; i++) {
-//        vector_insert(&v, i);
-//    }
-//
-//    vector_remove(&v, 9);
-//    
-//    //---
-//    for (i = 0; i < vector_size(&v); i++) {
-//        int var = (vector_access(&v, i));
-//        printf("%d. %d\n", i, var);
-//    }
-//    log_info("DONE");
-//    return 0;
-    
-    
-//    //--- vector test with pointer
-//    struct vector v = vector_create(10, 2);
-//    int N = 20;
-//    int *arr = malloc(N * sizeof (int));
-//    int i;
-//    for (i = 0; i < N; i++) {
-//        *(arr + i) = i;
-//        vector_insert(&v, arr + i);
-//    }
-//
-//    vector_remove(&v, arr + 9);
-//    //vector_remove(&v, arr + 10);
-//    
-//    //---
-//    void *data = v.data;
-//    for (i = 0; i < vector_size(&v); i++) {
-//        int *var = (int*) (vector_access(&v, i));
-//        printf("%d. 0x%x : %d\n", i, var, *var);
-//    }
-//    log_info("DONE");
-//    return 0;
+    init_rand();
+    //--- zen_cookie test
+    init_rand();
+
+//    //--- test cookie save
+//    char *cookie = strndup(cookie_put_content(0x123456), 10);
+//    void *ret = cookie_get_content(cookie);
+//    log_info("DONE: cookie");
+
+    //    int i;
+    //    for (i = 0; i < 10; i++) {
+    //        char *cookie = zen_cookie();
+    //        log_info("[%d] cookie: %s", i, cookie);
+    //        free(cookie);
+    //    }
+
+
+    //    //--- vector int
+    //    struct vector v = vector_create(10, 2);
+    //    int N = 20;
+    //    int *arr = malloc(N * sizeof (int));
+    //    int i;
+    //    for (i = 0; i < N; i++) {
+    //        vector_insert(&v, i);
+    //    }
+    //
+    //    vector_remove(&v, 9);
+    //    
+    //    //---
+    //    for (i = 0; i < vector_size(&v); i++) {
+    //        int var = (vector_access(&v, i));
+    //        printf("%d. %d\n", i, var);
+    //    }
+    //    log_info("DONE");
+    //    return 0;
+
+
+    //    //--- vector test with pointer
+    //    struct vector v = vector_create(10, 2);
+    //    int N = 20;
+    //    int *arr = malloc(N * sizeof (int));
+    //    int i;
+    //    for (i = 0; i < N; i++) {
+    //        *(arr + i) = i;
+    //        vector_insert(&v, arr + i);
+    //    }
+    //
+    //    vector_remove(&v, arr + 9);
+    //    //vector_remove(&v, arr + 10);
+    //    
+    //    //---
+    //    void *data = v.data;
+    //    for (i = 0; i < vector_size(&v); i++) {
+    //        int *var = (int*) (vector_access(&v, i));
+    //        printf("%d. 0x%x : %d\n", i, var, *var);
+    //    }
+    //    log_info("DONE");
+    //    return 0;
 
     //    //--- test id_zen
     //    int i;

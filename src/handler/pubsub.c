@@ -70,8 +70,6 @@ void format_msg(char *msg, int size) {
     }
 }
 
-#define COMPARE(data, str) strncmp(ib->curr, str, strlen(str))
-
 int process_plain_text(int fd, struct buffer* ib) {
     // implement follow api: https://cloud.google.com/pubsub/reference/rest/
 
@@ -79,80 +77,8 @@ int process_plain_text(int fd, struct buffer* ib) {
     // protocol parse: text protocol
     int len = buffer_remain_read(ib);
     format_msg(ib->curr, len);
-
-    const char *cmd = ib->curr;
-    const char *param = NULL;
-    //--- message
-    if (!COMPARE(cmd, "ack ")) {
-        printf("[ack] %s\n", cmd);
-        //
-    }
-
-    //--- drive topic
-    if (!COMPARE(cmd, "create ")) {
-        param = cmd + 7;
-        printf("[create] %s\n", param);
-        ret = model_topic_create(fd, param);
-    }
-    if (!COMPARE(cmd, "delete ")) {
-        param = cmd + 7;
-        printf("[delete] %s\n", param);
-        ret = model_topic_delete(fd, param);
-    }
-
-    //--- pubsub
-    if (!COMPARE(cmd, "sub ")) {
-        param = cmd + 4;
-        printf("[sub] %s\n", param);
-        ret = model_sub(fd, param);
-    }
-    if (!COMPARE(cmd, "unsub ")) {
-        param = cmd + 6;
-        printf("[unsub] %s\n", param);
-        ret = model_unsub(fd, param);
-    }
-
-    if (!COMPARE(ib->curr, "pub ")) {
-        param = cmd + 4;
-        printf("[pub] %s\n", param);
-        char *pos = strchr(param, ' ');
-        if (pos > 0) {
-            // <impl>
-            *pos = 0;
-            pos++;
-            ret = model_pub(fd, param, pos);
-        } else {
-            log_warn("incorrect parameter: %s", param);
-        }
-    }
-
-    //--- user
-    if (!COMPARE(ib->curr, "login ")) {
-        param = cmd + 6;
-        printf("[login] %s\n", param);
-        const char* user = param;
-        char *auth = strchr(user, ' ');
-        if (auth) {
-            *auth = 0;
-            auth++;
-            ret = model_acc_auth(fd, user, auth);
-        } else {
-            ret = ZB_CLOSE;
-        }
-    }
-    if (!COMPARE(ib->curr, "logup ")) {
-        param = cmd + 6;
-        printf("[logup] %s\n", param);
-        const char* user = param;
-        char *auth = strchr(user, ' ');
-        if (auth) {
-            *auth = 0;
-            auth++;
-            ret = model_acc_create(fd, user, auth);
-        } else {
-            ret = ZB_CLOSE;
-        }
-    }
+    int action = -1;
+    ret = model_process(fd, ib->curr, ' ', &action);
     buffer_reset(ib);
     return ret;
 }
@@ -207,7 +133,7 @@ int psub_load_config(void *config) {
     if (!config_setting_lookup_int64(psub_cfg, "max_conn", (long long *) &_stat.max_conn)) {
         log_fatal("handler(%s) incorrect config", handler_pubsub.name);
     } else {
-        log_info("%s{max_conn(%ld)}", handler_pubsub.name, _stat.max_conn);
+        //log_info("%s{max_conn(%ld)}", handler_pubsub.name, _stat.max_conn);
     }
     return 0;
 }

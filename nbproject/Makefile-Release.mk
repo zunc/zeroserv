@@ -45,6 +45,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/handler.o \
 	${OBJECTDIR}/src/handler/echo.o \
 	${OBJECTDIR}/src/handler/http.o \
+	${OBJECTDIR}/src/handler/http/http_parser.o \
+	${OBJECTDIR}/src/handler/http_pubsub.o \
 	${OBJECTDIR}/src/handler/mc/assoc.o \
 	${OBJECTDIR}/src/handler/mc/fat/slabs.o \
 	${OBJECTDIR}/src/handler/mc/fat/sto_layer.o \
@@ -145,6 +147,16 @@ ${OBJECTDIR}/src/handler/http.o: src/handler/http.c
 	${MKDIR} -p ${OBJECTDIR}/src/handler
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/http.o src/handler/http.c
+
+${OBJECTDIR}/src/handler/http/http_parser.o: src/handler/http/http_parser.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler/http
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/http/http_parser.o src/handler/http/http_parser.c
+
+${OBJECTDIR}/src/handler/http_pubsub.o: src/handler/http_pubsub.c 
+	${MKDIR} -p ${OBJECTDIR}/src/handler
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler/http_pubsub.o src/handler/http_pubsub.c
 
 ${OBJECTDIR}/src/handler/mc/assoc.o: src/handler/mc/assoc.c 
 	${MKDIR} -p ${OBJECTDIR}/src/handler/mc

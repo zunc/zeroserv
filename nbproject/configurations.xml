@@ -6,6 +6,7 @@
         <itemPath>src/common/compiler.h</itemPath>
         <itemPath>src/common/mini-clist.h</itemPath>
         <itemPath>src/common/netutil.h</itemPath>
+        <itemPath>src/common/strutil.h</itemPath>
         <itemPath>src/common/ticks.c</itemPath>
         <itemPath>src/common/ticks.h</itemPath>
         <itemPath>src/common/time.h</itemPath>
@@ -20,6 +21,12 @@
         <itemPath>src/ebtree/ebtree.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="handler" projectFiles="true">
+        <logicalFolder name="f3" displayName="http" projectFiles="true">
+          <itemPath>src/handler/http/cookie.h</itemPath>
+          <itemPath>src/handler/http/http_parser.c</itemPath>
+          <itemPath>src/handler/http/http_parser.h</itemPath>
+          <itemPath>src/handler/http/http_response.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="f1" displayName="mc" projectFiles="true">
           <logicalFolder name="f2" displayName="fat" projectFiles="true">
             <itemPath>src/handler/mc/fat/slabs.c</itemPath>
@@ -54,6 +61,8 @@
         <itemPath>src/handler/echo.h</itemPath>
         <itemPath>src/handler/http.c</itemPath>
         <itemPath>src/handler/http.h</itemPath>
+        <itemPath>src/handler/http_pubsub.c</itemPath>
+        <itemPath>src/handler/http_pubsub.h</itemPath>
         <itemPath>src/handler/memcached.c</itemPath>
         <itemPath>src/handler/memcached.h</itemPath>
         <itemPath>src/handler/pubsub.c</itemPath>
@@ -176,6 +185,8 @@
       </item>
       <item path="src/common/netutil.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/common/strutil.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/common/ticks.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/common/ticks.h" ex="false" tool="3" flavor2="0">
@@ -223,6 +234,18 @@
       <item path="src/handler/http.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler/http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/cookie.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_parser.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_response.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http_pubsub.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http_pubsub.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/handler/mc/assoc.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -419,6 +442,8 @@
       </item>
       <item path="src/common/netutil.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/common/strutil.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/common/ticks.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/common/ticks.h" ex="false" tool="3" flavor2="0">
@@ -466,6 +491,18 @@
       <item path="src/handler/http.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/handler/http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/cookie.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_parser.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_response.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http_pubsub.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http_pubsub.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/handler/mc/assoc.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -651,6 +688,8 @@
       </item>
       <item path="src/common/netutil.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/common/strutil.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/common/ticks.c" ex="false" tool="0" flavor2="9">
       </item>
       <item path="src/common/ticks.h" ex="false" tool="3" flavor2="0">
@@ -698,6 +737,18 @@
       <item path="src/handler/http.c" ex="false" tool="0" flavor2="9">
       </item>
       <item path="src/handler/http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/cookie.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_parser.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http/http_response.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler/http_pubsub.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/handler/http_pubsub.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/handler/mc/assoc.c" ex="false" tool="0" flavor2="9">
       </item>
