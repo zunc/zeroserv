@@ -9,7 +9,7 @@
 #define	MODEL_H
 
 enum ACTION {
-    ACT_ACK,
+    ACT_ACK = 1,
     ACT_CREATE,
     ACT_DELETE,
     ACT_SUB,
@@ -17,6 +17,17 @@ enum ACTION {
     ACT_PUB,
     ACT_LOGIN,
     ACT_LOGUP
+};
+
+enum ECODE {
+    C_SUCCESS = 0,
+    C_FAIL
+};
+
+typedef int (*on_response_cb) (const int fd, int action, const char *content, int length);
+
+struct on_event_cb_setting {
+    on_response_cb on_response; 
 };
 
 int model_acc_create(const int fd, const char* acc, const char* auth);

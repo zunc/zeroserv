@@ -24,6 +24,14 @@
 #define HTTP_BUFFER_SIZE 1024
 
 struct pubsub_stat _stat;
+struct on_event_cb_setting pubsub_event;
+
+int psub_on_response(const int fd, int action, const char *content, int length) {
+    struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
+    buffer_write(ob, content, length);
+    WR_ENABLE(fd);
+    return 0;
+}
 
 int psub_request_accept() {
     if (_stat.conn >= _stat.max_conn) {
@@ -40,7 +48,7 @@ int psub_accept(int nfd) {
     struct buffer *ob = (struct buffer*) malloc(sizeof (struct buffer));
     buffer_init(ob, HTTP_BUFFER_SIZE);
     fdtab[nfd].cb[DIR_RD].b = ob;
-    printf("[%*d] connected\n", 4, nfd);
+    //printf("[%*d] connected\n", 4, nfd);
     if (_stat.conn >= _stat.max_conn) {
         log_info("[pubsub] connection reach max(%ld)", _stat.max_conn);
         return ZB_FAIL;
@@ -64,7 +72,7 @@ void format_msg(char *msg, int size) {
     for (idx = 0; idx < size; idx++) {
         if ((*msg == '\n') || (*msg == '\r')) {
             *msg = '\0';
-            break;
+            //break;
         }
         msg++;
     }
@@ -77,9 +85,18 @@ int process_plain_text(int fd, struct buffer* ib) {
     // protocol parse: text protocol
     int len = buffer_remain_read(ib);
     format_msg(ib->curr, len);
-    int action = -1;
-    ret = model_process(fd, ib->curr, ' ', &action);
-    buffer_reset(ib);
+    int count = 0;
+    while (count < len) {
+        int action = -1;
+        int req_len = strlen(ib->curr);
+        ret = model_process(fd, ib->curr, ' ', &action);
+        int inc = (count + req_len + 2 <= len) ? req_len + 2 : len - count;
+        ib->curr += inc; // 0x13 0x00
+        count += inc;
+    }
+
+    //--- process buffer
+    if (buffer_empty(ib)) buffer_reset(ib);
     return ret;
 }
 
@@ -92,13 +109,10 @@ int psub_read(int fd) {
     if (n > 0) {
         // recv byte
         ib->r += n;
-        //log_dbg("recv: %d", n);
-        //ret |= ZB_SET_WR;
-        *ib->r = 0;
         ret = process_plain_text(fd, ib);
     } else {
         log_dbg("recv fail: %d", n);
-        printf("[%*d]disconnect\n", 4, fd);
+        // printf("[%*d]disconnect\n", 4, fd);
         return ZB_CLOSE;
     }
     return ret;
@@ -141,5 +155,8 @@ int psub_load_config(void *config) {
 __attribute__((constructor))
 static void __psub_handler_init(void) {
     _stat.conn = 0;
+    handler_pubsub.user_data = (void*) &pubsub_event;
     handler_register(&handler_pubsub);
+    //--- pubsub
+    pubsub_event.on_response = psub_on_response;
 }

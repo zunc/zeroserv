@@ -13,8 +13,8 @@
 #define SERVER_NAME "zeroser"
 
 #define MIME_TEXT "text/html; charset=UTF-8"
-#define HTTP_ERR_OK         200
-#define HTTP_ERR_NOT_FOUND  404
+#define HTTP_OK         200
+#define HTTP_NOT_FOUND  404
 
 struct header_field {
     char *name;
@@ -24,7 +24,7 @@ struct header_field {
 struct http_response {
     int err_code;
     char *mime_type;
-    char *content;
+    const char *content;
     int length;
     struct vector fields;
 };

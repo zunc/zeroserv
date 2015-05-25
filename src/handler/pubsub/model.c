@@ -5,36 +5,38 @@
 #include "fd.h"
 #include "idzen.h"
 #include "common/strutil.h"
+#include "type/protocols.h"
 #include <stdio.h>
 
+#define IS_SUCCESS(er) ((er) == C_SUCCESS)
+
 int model_acc_create(const int fd, const char* user, const char* auth) {
-    printf("[CREATE] user(\"%s\"), pass(\"%s\")\n", user, auth);
+    // printf("[CREATE] user(\"%s\"), pass(\"%s\")\n", user, auth);
     struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
     if (account_create(user, auth) < 0) {
-        buffer_sprintf(ob, RED("> create user error\n"));
+        return C_FAIL;
     } else {
-        buffer_sprintf(ob, GREEN("> create user(\"%s\") success\n"), user);
+        log_warn("[LOGUP] create user(\"%s\") success", user);
+        return C_SUCCESS;
     }
-    return ZB_SET_WR;
 }
 
 int model_acc_auth(const int fd, const char* user, const char* auth) {
-    printf("[LOGIN] user(\"%s\"), pass(\"%s\")\n", user, auth);
     struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
     struct account* acc = account_get(user);
     if (acc && !strncmp(acc->auth, auth, strlen(acc->auth))) {
-        buffer_sprintf(ob, GREEN("> auth user(\"%s\") success\n"), user);
+        log_warn("[LOGIN] %d : user(%s)", fd, user);
         acc->fd = fd;
+        return C_SUCCESS;
     } else {
-        buffer_sprintf(ob, RED("> auth user error\n"));
+        return C_FAIL;
     }
-    return ZB_SET_WR;
 }
 
 int model_acc_offline(const int fd) {
     struct account* acc = account_get_by_fd(fd);
     if (acc) {
-        printf("[OFFLINE] fd(%d), user(%s)\n", fd, acc->name);
+        log_warn("[OFFLINE] fd(%d), user(%s)", fd, acc->name);
         acc->fd = 0;
     }
     return !acc;
@@ -45,11 +47,10 @@ int model_sub(const int fd, const char* topic) {
     struct topic *top = topic_get(topic);
     struct account *acc = account_get_by_fd(fd);
     if (top && acc && !topic_join(top, acc)) {
-        buffer_sprintf(ob, GREEN("> sub(\"%s\") success\n"), topic);
+        return C_SUCCESS;
     } else {
-        buffer_sprintf(ob, RED("> sub(\"%s\") error\n"), topic);
+        return C_FAIL;
     }
-    return ZB_SET_WR;
 }
 
 int model_unsub(const int fd, const char* topic) {
@@ -57,11 +58,10 @@ int model_unsub(const int fd, const char* topic) {
     struct topic *top = topic_get(topic);
     struct account *acc = account_get_by_fd(fd);
     if (top && acc && !topic_left(top, acc)) {
-        buffer_sprintf(ob, GREEN("> unsub(\"%s\") success\n"), topic);
+        return C_SUCCESS;
     } else {
-        buffer_sprintf(ob, RED("> unsub(\"%s\") error\n"), topic);
+        return C_FAIL;
     }
-    return ZB_SET_WR;
 }
 
 int model_pub(const int fd, const char* topic, const char* msg) {
@@ -69,19 +69,25 @@ int model_pub(const int fd, const char* topic, const char* msg) {
     struct topic *top = topic_get(topic);
     struct account *acc_curr = account_get_by_fd(fd);
     if (!top || !acc_curr) {
-        buffer_sprintf(ob, RED("> pub(\"%s\") error\n"), topic);
-        return ZB_SET_WR;
+        return C_FAIL;
     }
     int i;
     for (i = 0; i < top->members.size; i++) {
         struct account *acc = vector_access(&top->members, i);
         ASSERT(acc);
-        struct buffer *ob_dst = fdtab[acc->fd].cb[DIR_WR].b;
-        buffer_sprintf(ob_dst, "%s: %s\n", acc_curr->name, msg);
-        WR_ENABLE(acc->fd);
+        if (acc->fd) {
+            static char bdc_msg[4096] = {0};
+            int ret = snprintf(bdc_msg, sizeof (bdc_msg), "%s: %s\n", acc_curr->name, msg);
+            if (ret) {
+                struct listener *listen = (struct listener *) fdtab[acc->fd].owner;
+                ASSERT(listen);
+                ASSERT(listen->handler->user_data);
+                struct on_event_cb_setting *on_event = listen->handler->user_data;
+                on_event->on_response(acc->fd, ACT_PUB, bdc_msg, ret);
+            }
+        }
     }
-    buffer_sprintf(ob, GREEN("> pub(\"%s\") success, msg_id: %d\n"), topic, id_zen("msg"));
-    return ZB_SET_WR;
+    return C_SUCCESS;
 }
 
 int model_topic_create(const int fd, const char* topic) {
@@ -89,46 +95,46 @@ int model_topic_create(const int fd, const char* topic) {
     struct topic *top = topic_create(topic);
     struct account *acc = account_get_by_fd(fd);
     if (top && acc && !topic_join(top, acc)) {
-        buffer_sprintf(ob, GREEN("> sub_create(\"%s\") success\n"), topic);
+        return C_SUCCESS;
     } else {
-        buffer_sprintf(ob, RED("> sub_create(\"%s\") error\n"), topic);
+        return C_FAIL;
     }
-    return ZB_SET_WR;
 }
 
 int model_topic_delete(const int fd, const char* topic) {
     struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
     if (!topic_delete(topic)) {
-        buffer_sprintf(ob, GREEN("> sub_create(\"%s\") success\n"), topic);
+        return C_SUCCESS;
     } else {
-        buffer_sprintf(ob, RED("> sub_create(\"%s\") error\n"), topic);
+        return C_FAIL;
     }
-    return ZB_SET_WR;
 }
 
 //--- process center
 
 int model_process(const int fd, const char *content, char delim, int *action) {
-    int ret = ZB_NOP;
+    int state = ZB_SET_WR;
+    int ret = C_SUCCESS;
     const char *cmd = content;
     const char *param = NULL;
+    *action = 0;
     //--- message
     if (COMPARE(cmd, "ack")) {
-        printf("[ack] %s\n", cmd);
-        //
+        log_dbg("[ack] %s\n", cmd);
+        // <impl>
         *action = ACT_ACK;
     }
 
     //--- drive topic
     if (COMPARE(cmd, "create")) {
         param = cmd + 7;
-        printf("[create] %s\n", param);
+        log_dbg("[create] %s\n", param);
         ret = model_topic_create(fd, param);
         *action = ACT_CREATE;
     }
     if (COMPARE(cmd, "delete")) {
         param = cmd + 7;
-        printf("[delete] %s\n", param);
+        log_dbg("[delete] %s\n", param);
         ret = model_topic_delete(fd, param);
         *action = ACT_DELETE;
     }
@@ -136,23 +142,24 @@ int model_process(const int fd, const char *content, char delim, int *action) {
     //--- pubsub
     if (COMPARE(cmd, "sub")) {
         param = cmd + 4;
-        printf("[sub] %s\n", param);
+        log_dbg("[sub] %s\n", param);
         ret = model_sub(fd, param);
+        state = ZB_NOP;
+        // <impl>
         *action = ACT_SUB;
     }
     if (COMPARE(cmd, "unsub")) {
         param = cmd + 6;
-        printf("[unsub] %s\n", param);
+        log_dbg("[unsub] %s\n", param);
         ret = model_unsub(fd, param);
         *action = ACT_UNSUB;
     }
 
     if (COMPARE(cmd, "pub")) {
         param = cmd + 4;
-        printf("[pub] %s\n", param);
-        char *pos = strchr(param, ' ');
+        log_dbg("[pub] %s\n", param);
+        char *pos = strchr(param, delim);
         if (pos > 0) {
-            // <impl>
             *pos = 0;
             pos++;
             ret = model_pub(fd, param, pos);
@@ -165,7 +172,7 @@ int model_process(const int fd, const char *content, char delim, int *action) {
     //--- user
     if (COMPARE(cmd, "login")) {
         param = cmd + 6;
-        printf("[login] %s\n", param);
+        log_dbg("[login] %s\n", param);
         const char* user = param;
         char *auth = strchr(user, delim);
         if (auth) {
@@ -173,13 +180,13 @@ int model_process(const int fd, const char *content, char delim, int *action) {
             auth++;
             ret = model_acc_auth(fd, user, auth);
         } else {
-            ret = ZB_CLOSE;
+            state = ZB_CLOSE;
         }
         *action = ACT_LOGIN;
     }
     if (COMPARE(cmd, "logup")) {
         param = cmd + 6;
-        printf("[logup] %s\n", param);
+        log_dbg("[logup] %s\n", param);
         const char* user = param;
         char *auth = strchr(user, delim);
         if (auth) {
@@ -187,11 +194,25 @@ int model_process(const int fd, const char *content, char delim, int *action) {
             auth++;
             ret = model_acc_create(fd, user, auth);
         } else {
-            ret = ZB_CLOSE;
+            state = ZB_CLOSE;
         }
         *action = ACT_LOGUP;
     }
-    return ret;
+
+    //--- response process
+    if (*action != ACT_SUB && ret == C_SUCCESS) return state;
+    static char success[] = GREEN("success\n");
+    static char error[] = RED("error\n");
+    static char error_incorrect[] = RED("incorrect param\n");
+    sprintf(error_incorrect, "incorrect param: %s\n", content);
+    char *rep = ret == C_SUCCESS ? success : error;
+    if (*action == 0) rep = error_incorrect;
+    struct listener *listen = (struct listener *) fdtab[fd].owner;
+    ASSERT(listen);
+    ASSERT(listen->handler->user_data);
+    struct on_event_cb_setting *on_event = listen->handler->user_data;
+    on_event->on_response(fd, *action, rep, strlen(rep));
+    return state;
 }
 
 //--- util for handler

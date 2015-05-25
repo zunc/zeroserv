@@ -85,16 +85,32 @@ int proc_center() {
 #include "handler/pubsub/idzen.h"
 #include "common/vector.h"
 #include "handler/http/cookie.h"
+//#include "common/parson.h"
 
 int main(int argc, char** argv) {
     init_rand();
-    //--- zen_cookie test
-    init_rand();
 
-//    //--- test cookie save
-//    char *cookie = strndup(cookie_put_content(0x123456), 10);
-//    void *ret = cookie_get_content(cookie);
-//    log_info("DONE: cookie");
+//    //--- json test
+//    JSON_Value *root_value = json_value_init_object();
+//    JSON_Object *root_object = json_value_get_object(root_value);
+//    char *serialized_string = NULL;
+//    json_object_set_string(root_object, "name", "John Smith");
+//    json_object_set_number(root_object, "age", 25);
+//    json_object_dotset_string(root_object, "address.city", "Cupertino");
+//    json_object_dotset_value(root_object, "contact.emails", json_parse_string("[\"email@example.com\",\"email2@example.com\"]"));
+//    serialized_string = json_serialize_to_string(root_value);
+//    puts(serialized_string);
+//    json_free_serialized_string(serialized_string);
+//    json_value_free(root_value);
+//    log_info("JSON test done");
+//    return 0;
+
+    //--- zen_cookie test
+
+    //    //--- test cookie save
+    //    char *cookie = strndup(cookie_put_content(0x123456), 10);
+    //    void *ret = cookie_get_content(cookie);
+    //    log_info("DONE: cookie");
 
     //    int i;
     //    for (i = 0; i < 10; i++) {

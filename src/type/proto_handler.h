@@ -26,6 +26,7 @@ struct handler {
     int (*deinit)(int fd);
     int (*load_config)(void *cfg);
     void *owner;
+    void *user_data;
     struct list list;
 };
 

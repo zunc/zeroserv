@@ -24,11 +24,13 @@
 #include "http/http_response.h"
 #include "common/strutil.h"
 #include "http/cookie.h"
+#include "common/parson.h"
 
 #define HTTP_BUFFER_SIZE 1024
 
 struct http_pubsub_stat _stat;
 http_parser_settings settings;
+struct on_event_cb_setting http_pubsub_event;
 #define SESSION "zchat"
 
 int http_psub_request_accept() {
@@ -37,6 +39,42 @@ int http_psub_request_accept() {
         return ZB_FAIL;
     }
     return ZB_NOP;
+}
+
+int http_psub_on_response(const int fd, int action, const char *content, int length) {
+    static char buf[4096] = {0};
+    struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
+    struct http_response *rep = NULL;
+    rep = http_create_response(HTTP_OK, MIME_TEXT, ob->curr, buffer_remain_read(ob));
+    struct account *acc = model_acc_current(fd);
+    char cookie_val[1024];
+    if (acc && action == ACT_LOGIN) {
+        char *cookie_name = strndup(cookie_put_content(acc), COOKIE_LEN);
+        sprintf(cookie_val, SESSION "=%s; Path=/", cookie_name);
+        http_add_header_field(rep, "Set-Cookie", cookie_val);
+        // log_warn("cookie: %s", cookie_name);
+        free(cookie_name);
+    }
+
+    //--- json serialization
+    JSON_Value *root_value = json_value_init_object();
+    JSON_Object *root_object = json_value_get_object(root_value);
+    char *serialized_string = NULL;
+    json_object_set_string(root_object, "msg", content);
+    serialized_string = json_serialize_to_string(root_value);
+
+    rep->content = serialized_string;
+    rep->length = strlen(serialized_string);
+    int buf_len = http_msg_response(buf, sizeof (buf), rep);
+    buffer_reset(ob);
+    buffer_write(ob, buf, buf_len);
+
+    // free
+    json_free_serialized_string(serialized_string);
+    json_value_free(root_value);
+    http_destroy(rep);
+    WR_ENABLE(fd);
+    return 0;
 }
 
 int http_on_url(http_parser* parser, const char *at, size_t length) {
@@ -65,10 +103,7 @@ int http_on_msg_complete(http_parser* parser) {
     //log_info("http_on_msg_complete");
     //--- get
     int fd = (int) (long) parser->data;
-    static char buf[4096] = {0};
-    struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
     struct session *sess = fdtab[fd].context;
-    struct http_response *rep = NULL;
 
     //--- get session by cookie
     if (sess->cookie) {
@@ -87,36 +122,25 @@ int http_on_msg_complete(http_parser* parser) {
     int ret = model_process(fd, param, '/', &action);
 
     //--- http repsonse proc
-    rep = http_create_response(HTTP_ERR_OK, MIME_TEXT,
-        ob->curr, buffer_remain_read(ob));
-    struct account *acc = model_acc_current(fd);
-    char cookie_val[1024];
-    if (acc && action == ACT_LOGIN) {
-        char *cookie_name = strndup(cookie_put_content(acc), 10);
-        sprintf(cookie_val, SESSION "=%s; Path=/", cookie_name);
-        http_add_header_field(rep, "Set-Cookie", cookie_val);
-        log_warn("cookie: %s", cookie_name);
-        free(cookie_name);
-    }
-    int buf_len = http_msg_response(buf, sizeof (buf), rep);
-    buffer_reset(ob);
-    buffer_write(ob, buf, buf_len);
-    WR_ENABLE(fd);
+
+    //WR_ENABLE(fd);
 
     if (ret & ZB_SET_WR) WR_ENABLE(fd);
     if (ret & ZB_SET_RD) RD_ENABLE(fd);
 
     //--- free
     free(param);
-    http_destroy(rep);
-
     return 0;
 }
 
 void init_parser() {
+    //--- http-parser
     settings.on_url = http_on_url;
     settings.on_header_field = http_on_header_field;
     settings.on_message_complete = http_on_msg_complete;
+
+    //--- pubsub
+    http_pubsub_event.on_response = http_psub_on_response;
 }
 
 int http_psub_accept(int nfd) {
@@ -218,6 +242,7 @@ int http_psub_load_config(void *config) {
 __attribute__((constructor))
 static void __http_psub_handler_init(void) {
     _stat.conn = 0;
-    handler_register(&handler_http_pubsub);
     init_parser();
+    handler_http_pubsub.user_data = (void*) &http_pubsub_event;
+    handler_register(&handler_http_pubsub);
 }
