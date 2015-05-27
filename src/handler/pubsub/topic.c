@@ -13,6 +13,7 @@ struct topic* topic_create(const char *name) {
     new_top->count = 0;
     new_top->created_time = new_top->last_active = 0;
     new_top->members = vector_create(20, 2);
+    new_top->fds = vector_create(20, 2);
     LIST_ADDQ(&topics, &new_top->list);
     return new_top;
 }
@@ -33,8 +34,22 @@ int topic_delete(const char *name) {
 }
 
 int topic_join(struct topic *top, struct account *acc) {
-    vector_insert(&top->members, acc);
-    vector_insert(&acc->sub_lists, top);
+    if (!vector_is_exist(&top->members, acc)) {
+        vector_insert(&top->members, acc);
+        vector_insert(&acc->sub_lists, top);
+    }
+    return 0;
+}
+
+int topic_sub(struct topic *top, int fd) {
+    if (!vector_is_exist(&top->fds, (void*)(long) fd)) {
+        vector_insert(&top->fds, (void*)(long) fd);
+    }
+    return 0;
+}
+
+int topic_unsub(struct topic *top, int fd) {
+    vector_remove(&top->fds, (void*)(long) fd);
     return 0;
 }
 
@@ -52,4 +67,27 @@ struct topic* topic_get(const char *name) {
             return top;
     }
     return 0;
+}
+
+struct vector topic_list() {
+    vector ret = vector_create(20, 2);
+    struct topic *top;
+
+    list_for_each_entry(top, &topics, list) {
+        vector_insert(&ret, top);
+    }
+    return ret;
+}
+
+struct vector topic_list_user(const char *name) {
+    vector ret = vector_create(10, 2);
+    struct topic *top = topic_get(name);
+    if (!top) return ret;
+    int i;
+    for (i = 0; i < top->members.size; i++) {
+        struct account *acc = vector_access(&top->members, i);
+        ASSERT(acc);
+        vector_insert(&ret, acc);
+    }
+    return ret;
 }

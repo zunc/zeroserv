@@ -21,6 +21,7 @@ int account_create(const char *name, const char *auth) {
     new_acc->id = id_zen("account");
     new_acc->created_time = new_acc->last_active = 0;
     new_acc->sub_lists = vector_create(20, 2);
+    new_acc->fds = vector_create(20, 2);
     LIST_ADDQ(&accounts, &new_acc->list);
     return new_acc->id;
 #endif
@@ -43,7 +44,7 @@ struct account* account_get_by_fd(const int fd) {
 #if !USE_DB
 
     list_for_each_entry(acc, &accounts, list) {
-        if (acc->fd == fd)
+        if (vector_is_exist(&acc->fds, (void*)(long) fd))
             return acc;
     }
 #endif

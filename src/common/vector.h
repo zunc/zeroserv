@@ -3,7 +3,7 @@
  *
  *
  * Written by Raphael S. Carvalho <raphael.scarv@gmail.com>
- * Custom by Khoai <dungcoivb@gmail.com>
+ * Custom only pointer case by Khoai <dungcoivb@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,6 +67,10 @@ static int vector_size(vector *v) {
     return v->size;
 }
 
+static int vector_is_empty(vector *v) {
+    return v->size == 0;
+}
+
 static void *vector_insert(vector *v, void *object) {
     assert(v->capacity > 0);
     assert(v->size <= v->capacity);
@@ -102,6 +106,19 @@ static int vector_remove(vector *v, void *object) {
         }
     }
     return 1;
+}
+
+static int vector_is_exist(vector *v, void *object) {
+    assert(v);
+    assert(v->capacity > 0);
+    int idx;
+    for (idx = 0; idx < v->size; idx++) {
+        void *pointer = ELEM(idx);
+        if (*(void**) pointer == object) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 static int vector_footprint(vector *v) {

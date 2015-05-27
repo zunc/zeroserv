@@ -13,6 +13,7 @@
 #include "common/uthash.h"
 
 #define COOKIE_LEN 10
+#define COOKIE_LEN_STR 11
 
 static void init_rand() {
     srand(time(NULL));
@@ -34,7 +35,7 @@ static char* zen_cookie() {
 
 struct cookie_item {
     long time_save; // time save, use to remove expired cookie
-    char name[COOKIE_LEN]; // cookie name
+    char name[COOKIE_LEN_STR]; // cookie name
     void *content; // user content
     UT_hash_handle hh;
 };
@@ -66,6 +67,8 @@ static char* cookie_put_content(void *content) {
     cookie->content = content;
     char *cookie_name = zen_cookie();
     strncpy(cookie->name, cookie_name, COOKIE_LEN);
+    cookie->name[COOKIE_LEN] = 0;
+    log_warn("[COOKIE] %s: 0x%lx", cookie_name, (long) content);
     free(cookie_name);
     HASH_ADD_STR(cookie_list, name, cookie);
     return cookie->name;

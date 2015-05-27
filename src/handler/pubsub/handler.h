@@ -20,6 +20,7 @@ struct topic {
     long last_active;
     struct list list;
     vector members;
+    vector fds;
 };
 
 struct massage {
@@ -39,14 +40,19 @@ struct account {
     vector sub_lists;
     //struct list pub_lists;
     struct list list;
-    int fd; // fd = 0: is offline
+    // int fd; // fd = 0: is offline
+    vector fds;
 };
 
 struct topic* topic_create(const char *name);
 int topic_delete(const char *name);
 int topic_join(struct topic *top, struct account *acc);
+int topic_sub(struct topic *top, int fd);
+int topic_unsub(struct topic *top, int fd);
 int topic_left(struct topic *top, struct account *acc);
 struct topic* topic_get(const char *name);
+struct vector topic_list();
+struct vector topic_list_user(const char *name);
 
 int account_create(const char *name, const char *auth);
 int account_auth(const char *name, const char *auth);

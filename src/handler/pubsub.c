@@ -26,9 +26,30 @@
 struct pubsub_stat _stat;
 struct on_event_cb_setting pubsub_event;
 
-int psub_on_response(const int fd, int action, const char *content, int length) {
+int psub_on_response(const int fd, int action, const void *content, int length) {
     struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
-    buffer_write(ob, content, length);
+    if (action == ACT_LIST_TOPIC) {
+        vector *vlist = (vector*) content;
+        int i;
+        buffer_sprintf(ob, "--- List: %d topic\n", vector_size(vlist));
+        for (i = 0; i < vlist->size; i++) {
+            struct topic *top = vector_access(vlist, i);
+            ASSERT(top);
+            buffer_sprintf(ob, "> %s : %d members\n", top->name, vector_size(&top->members));
+        }
+    } else if (action == ACT_LIST_USER) {
+        vector *vlist = (vector*) content;
+        int i;
+        buffer_sprintf(ob, "--- Members: %d user\n", vector_size(vlist));
+        for (i = 0; i < vlist->size; i++) {
+            struct account *acc = vector_access(vlist, i);
+            ASSERT(acc);
+            buffer_sprintf(ob, "> %s : %s\n", acc->name, vector_size(&acc->fds) ? "Online" : "Offline");
+        }
+    } else {
+        buffer_write(ob, content, length);
+        buffer_write(ob, "\n", 1);
+    }
     WR_ENABLE(fd);
     return 0;
 }

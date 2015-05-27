@@ -41,28 +41,84 @@ int http_psub_request_accept() {
     return ZB_NOP;
 }
 
-int http_psub_on_response(const int fd, int action, const char *content, int length) {
+int http_psub_on_response(const int fd, int action, const void *content, int length) {
+    // http response packet smaller 4kb
     static char buf[4096] = {0};
     struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
     struct http_response *rep = NULL;
     rep = http_create_response(HTTP_OK, MIME_TEXT, ob->curr, buffer_remain_read(ob));
     struct account *acc = model_acc_current(fd);
-    char cookie_val[1024];
+    static char cookie_field[1024];
+    static char cookie_val[1024];
     if (acc && action == ACT_LOGIN) {
-        char *cookie_name = strndup(cookie_put_content(acc), COOKIE_LEN);
-        sprintf(cookie_val, SESSION "=%s; Path=/", cookie_name);
-        http_add_header_field(rep, "Set-Cookie", cookie_val);
-        // log_warn("cookie: %s", cookie_name);
-        free(cookie_name);
+        strncpy(cookie_val, cookie_put_content(acc), COOKIE_LEN);
+        sprintf(cookie_field, SESSION "=%s; Path=/", cookie_val);
+        http_add_header_field(rep, "Set-Cookie", cookie_field);
     }
+
+    http_add_header_field(rep, "Access-Control-Allow-Methods", "GET, POST");
+    http_add_header_field(rep, "Access-Control-Allow-Credentials", "true");
+    http_add_header_field(rep, "Access-Control-Allow-Origin", "http://127.0.0.1:8000");
+    http_add_header_field(rep, "Access-Control-Allow-Headers", "Content-Type, *");
 
     //--- json serialization
     JSON_Value *root_value = json_value_init_object();
     JSON_Object *root_object = json_value_get_object(root_value);
     char *serialized_string = NULL;
-    json_object_set_string(root_object, "msg", content);
-    serialized_string = json_serialize_to_string(root_value);
+    if (action == ACT_LIST_TOPIC) {
+        vector *vlist = (vector*) content;
+        int i;
+        json_object_set_number(root_object, "size", vector_size(vlist));
+        json_object_set_value(root_object, "topics", json_value_init_array());
+        JSON_Array *arr = json_object_get_array(root_object, "topics");
+        for (i = 0; i < vlist->size; i++) {
+            struct topic *top = vector_access(vlist, i);
+            ASSERT(top);
+            JSON_Value *node_value = json_value_init_object();
+            JSON_Object *node_object = json_value_get_object(node_value);
+            json_object_set_string(node_object, "name", top->name);
+            json_object_set_number(node_object, "members", vector_size(&top->members));
+            json_object_set_number(node_object, "last_active", top->last_active);
+            json_array_append_value(arr, node_value);
+        }
+    } else if (action == ACT_LIST_USER) {
+        vector *vlist = (vector*) content;
+        json_object_set_number(root_object, "size", vector_size(vlist));
+        json_object_set_value(root_object, "members", json_value_init_array());
+        JSON_Array *arr = json_object_get_array(root_object, "members");
+        int i;
+        buffer_sprintf(ob, "--- Members: %d user\n", vector_size(vlist));
+        for (i = 0; i < vlist->size; i++) {
+            struct account *acc = vector_access(vlist, i);
+            ASSERT(acc);
+            //buffer_sprintf(ob, "> %s : %s\n", acc->name, acc->fd ? "Online" : "Offline");
+            JSON_Value *node_value = json_value_init_object();
+            JSON_Object *node_object = json_value_get_object(node_value);
+            json_object_set_string(node_object, "name", acc->name);
+            json_object_set_boolean(node_object, "online", vector_size(&acc->fds) != 0);
+            json_object_set_number(node_object, "last_active", acc->last_active);
+            json_array_append_value(arr, node_value);
+        }
+    } else if (action == ACT_REP_SUB) {
+        char *pos = strchr((char*) content, ':');
+        if (pos) {
+            static char username[1024], msg[1024];
+            memset(username, 0, sizeof(username));
+            memset(msg, 0, sizeof(msg));
+            strncpy(username, content, pos - (char*) content);
+            pos += 2;
+            strncpy(msg, pos, MIN(length - (pos - (char*) content), sizeof(msg)));
+            json_object_set_string(root_object, "user", username);
+            json_object_set_string(root_object, "msg", msg);
+        }
+    } else {
+        json_object_set_string(root_object, "msg", content);
+        if (acc && action == ACT_LOGIN) {
+            json_object_set_string(root_object, SESSION, cookie_val);
+        }
+    }
 
+    serialized_string = json_serialize_to_string(root_value);
     rep->content = serialized_string;
     rep->length = strlen(serialized_string);
     int buf_len = http_msg_response(buf, sizeof (buf), rep);
@@ -81,7 +137,12 @@ int http_on_url(http_parser* parser, const char *at, size_t length) {
     int fd = (int) (long) parser->data;
     struct session *sess = fdtab[fd].context;
     FREE(sess->url);
-    sess->url = strndup(at, length);
+    static char buf[4096];
+    memset(buf, 0, sizeof(buf));
+    strncpy(buf, at, length);
+    sess->url = malloc(length + 1);
+    memset(sess->url, 0, length + 1);
+    uri_decode(buf, sess->url);
     return 0;
 }
 
@@ -90,7 +151,9 @@ int http_on_header_field(http_parser* parser, const char *at, size_t length) {
     struct session *sess = fdtab[fd].context;
     if (COMPARE(at, "Cookie")) {
         const char *name = at + length + 2;
-        if (COMPARE(name, SESSION)) {
+        const char *zchat = strstr(at, "zchat=");
+        if (zchat) {
+            name = zchat;
             const char *pos = strchr(name, '\r');
             FREE(sess->cookie);
             if (pos > 0) sess->cookie = strndup(name, pos - name);
@@ -111,7 +174,10 @@ int http_on_msg_complete(http_parser* parser) {
         char *cookie_val = strchr(sess->cookie, '=');
         if (cookie_val) {
             struct account *acc = cookie_get_content(++cookie_val);
-            if (acc) acc->fd = fd;
+            if (acc) {
+                log_err("acc: %s", acc->name);
+                vector_insert(&acc->fds, (void*)(long) fd);
+            }
         }
     }
 
@@ -168,19 +234,22 @@ int http_psub_accept(int nfd) {
 }
 
 int http_psub_disconnect(int fd) {
-    //    log_info("[%*d] disconnect", 4, fd);
+    log_info("[%*d] disconnect", 4, fd);
     _stat.conn--;
     model_acc_offline(fd);
     struct buffer *ob = fdtab[fd].cb[DIR_WR].b;
     buffer_free(ob);
+    fdtab[fd].cb[DIR_WR].b = NULL;
     http_parser *req = fdtab[fd].cb[DIR_WR].parser;
     free(req);
+    fdtab[fd].cb[DIR_WR].parser = NULL;
     struct session *sess = fdtab[fd].context;
     if (sess) {
         FREE(sess->cookie);
         FREE(sess->url);
         FREE(sess);
     }
+    fdtab[fd].context = NULL;
     return ZB_NOP;
 }
 
