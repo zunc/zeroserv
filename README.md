@@ -28,10 +28,9 @@ pubsub: hỗ trợ cả plain và http protocol
 zeroserv : trả về uri request
 nginx : trả về trang index trống
 ```
-Giá trị trả về tính theo request/s
-zeroserv      | nginx
-------------- | -------------
-32615.28      | 29687.42
+|zeroserv      | nginx        |
+|--------------|--------------|
+|32615.28 req/s|29687.42 req/s|
 
 
 ## Dễ dùng
