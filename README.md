@@ -24,7 +24,7 @@ pubsub: hỗ trợ cả plain và http protocol
 
 ## Hiệu suất
 * Một thử nghiệm nhỏ về hiệu suất với **apachebench**, với tùy chọn connection không keep-alive, trả về giá trị đơn giản
-* ```
+```
 zeroserv : trả về uri request
 nginx : trả về trang index trống
 ```
