@@ -16,10 +16,22 @@
 echo (TCP/UDP) : simple echo
 http : simple http
 memcached (TCP)
+pubsub: hỗ trợ cả plain và http protocol
 ```
 
 ## Nên dùng khi nào ?
 * Øserv đặc biệt hiệu quả trong trường hợp mỗi kết nối lên server dùng một tài nguyên độc lập như xây dựng proxy, socks ...
+
+## Hiệu suất
+* Một thử nghiệm nhỏ về hiệu suất với **apachebench**, với tùy chọn connection không keep-alive, trả về giá trị đơn giản
+```
+zeroserv : trả về uri request
+nginx : trả về trang index trống
+```
+Giá trị trả về tính theo request/s
+zeroserv      | nginx
+------------- | -------------
+32615.28      | 29687.42
 
 
 ## Dễ dùng
